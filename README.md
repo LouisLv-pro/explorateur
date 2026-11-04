@@ -139,12 +139,8 @@ install it elsewhere.
 
 ### Default app for text files (optional)
 
-```bash
-brew install duti
-apps/explorateur/scripts/app-par-defaut.sh
-```
-
-Makes Explorateur the default app for the file types it declares (Markdown, code, data files).
+In the app menu, choose **Make Default for File Types…**, then pick the groups (Markdown and
+text, data, HTML, code). macOS asks you to confirm once per file type, one window at a time.
 
 ## What it uses on your Mac
 

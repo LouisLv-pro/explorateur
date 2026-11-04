@@ -43,6 +43,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
             commands::app::set_unsaved_changes,
             commands::app::quit_app,
             commands::app::set_language,
+            commands::default_app::default_app_status,
+            commands::default_app::set_default_app,
             commands::watch::watch_root,
             commands::watch::unwatch_root,
             commands::last_read::mark_read,

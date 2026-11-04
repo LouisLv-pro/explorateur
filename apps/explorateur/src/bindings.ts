@@ -59,6 +59,14 @@ export const commands = {
 	quitApp: () => __TAURI_INVOKE<void>("quit_app"),
 	/**  Rebâtit le menu natif dans la langue de l'interface (spec `langue-interface.md`). */
 	setLanguage: (lang: Lang) => typedError<null, AppError>(__TAURI_INVOKE("set_language", { lang })),
+	/**  État de chaque groupe : types distincts, déjà à explorateur, et ceux qui restent à demander. */
+	defaultAppStatus: () => typedError<GroupStatus[], AppError>(__TAURI_INVOKE("default_app_status")),
+	/**
+	 *  Demande à macOS de faire d'explorateur l'app par défaut de `uti`. Attend la réponse de
+	 *  l'utilisateur, puis relit l'état : `true` si explorateur ouvre désormais ce type. Un refus
+	 *  rend `false`, pas une erreur.
+	 */
+	setDefaultApp: (uti: string) => typedError<boolean, AppError>(__TAURI_INVOKE("set_default_app", { uti })),
 	/**  Surveille `path` (remplace la surveillance précédente). */
 	watchRoot: (path: string) => typedError<null, AppError>(__TAURI_INVOKE("watch_root", { path })),
 	/**  Arrête la surveillance du dossier racine. */
@@ -288,6 +296,11 @@ export type AppError = { kind: "Database"; message: string } |
 { kind: "InvalidUrl"; message: UrlError } | 
 /**  Échec du navigateur intégré (webview impossible à créer ou à placer). */
 { kind: "Browser"; message: string } | 
+/**
+ *  App lancée hors d'un paquet `.app` (`tauri dev`) : impossible d'en faire l'app par
+ *  défaut d'un type (spec `app-par-defaut.md`). Rien n'est demandé à macOS.
+ */
+{ kind: "NotBundled" } | 
 /**  Autre erreur d'entrée-sortie. */
 { kind: "Io"; message: string } | 
 /**
@@ -666,6 +679,26 @@ export type GithubUnavailable =
 /**  GitHub est injoignable. */
 "offline";
 
+/**  Groupe de types proposé dans le dialogue, dans l'ordre d'affichage. */
+export type Group = 
+/**  Markdown et texte. */
+"text" | 
+/**  Données (CSV, JSON, YAML…). */
+"data" | "html" | "code";
+
+/**
+ *  État d'un groupe : nombre de types distincts, combien sont déjà à explorateur, et ceux qui
+ *  restent à demander, dans l'ordre de la table.
+ */
+export type GroupStatus = {
+	group: Group,
+	/**  Toutes les extensions du groupe dans la table, même sans statut. */
+	extensions: string[],
+	types: number,
+	defaultTypes: number,
+	pending: PendingType[],
+};
+
 /**  Bloc de la gouttière, en lignes 1-indexées du texte de l'éditeur. */
 export type GutterBlock = {
 	kind: GutterKind,
@@ -861,6 +894,15 @@ export type PathStatuses = {
 
 /**  Des demandes sont arrivées (Finder, lien, CLI) : le front doit appeler `take_opened_paths`. */
 export type PathsOpened = null;
+
+/**
+ *  Type (UTI) pas encore ouvert par explorateur, avec les extensions de la table qui le
+ *  partagent (une seule confirmation de macOS pour elles).
+ */
+export type PendingType = {
+	uti: string,
+	extensions: string[],
+};
 
 /**  Contenu d'aperçu d'un fichier. Image et PDF sont lus par le front (protocole `asset`). */
 export type PreviewContent = { kind: "Markdown"; text: string } | { kind: "Html"; text: string } | 

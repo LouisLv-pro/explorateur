@@ -12,6 +12,7 @@ export const errors = {
   Remote: "{{detail}}",
   GithubUnavailable: "GitHub is unavailable.",
   IssueNotFound: "Issue not found.",
+  NotBundled: "Available in the installed app, not in development.",
   Gh: "{{detail}}",
   Browser: "Browser error: {{detail}}",
   Io: "Disk error: {{detail}}",

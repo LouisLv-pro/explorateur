@@ -50,6 +50,13 @@ portable-pty = "0.9"
 similar = "3"
 # Lecture des Cargo.toml (apps Rust d'explorateur, décision 0023 de l'app). Parsing seul, déjà tiré par Tauri.
 toml = { version = "1", default-features = false, features = ["parse", "serde"] }
+# Appels à AppKit (app par défaut d'un type, spec `app-par-defaut.md` d'explorateur). Même
+# famille et mêmes versions que celles tirées par Tauri ; seules les fonctionnalités utiles.
+objc2 = { version = "0.6", default-features = false, features = ["std"] }
+block2 = { version = "0.6", default-features = false, features = ["std"] }
+objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSBundle", "NSError", "NSString", "NSURL"] }
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "block2", "objc2-uniform-type-identifiers", "NSWorkspace"] }
+objc2-uniform-type-identifiers = { version = "0.3", default-features = false, features = ["std", "UTType"] }
 
 # Chaque crate hérite de ces lints avec `[lints] workspace = true`.
 [workspace.lints.rust]

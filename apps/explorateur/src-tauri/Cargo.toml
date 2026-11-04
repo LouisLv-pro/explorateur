@@ -28,6 +28,16 @@ tauri-specta.workspace = true
 specta-typescript.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+# Canal entre le gestionnaire de fin d'AppKit et la commande asynchrone (app par défaut).
+tokio = { workspace = true, features = ["sync"] }
+
+# App par défaut d'un type (spec `app-par-defaut.md`) : NSWorkspace, NSBundle et UTType.
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2.workspace = true
+block2.workspace = true
+objc2-foundation.workspace = true
+objc2-app-kit.workspace = true
+objc2-uniform-type-identifiers.workspace = true
 
 [lints]
 workspace = true

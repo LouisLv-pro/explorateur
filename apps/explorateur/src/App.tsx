@@ -12,6 +12,7 @@ import { Welcome } from "@/features/folders/Welcome";
 import { GitButton, GitPanel } from "@/features/git/GitPanel";
 import { GitProvider } from "@/features/git/GitProvider";
 import { Preview } from "@/features/preview/Preview";
+import { DefaultAppHost } from "@/features/default-app/DefaultAppHost";
 import { preloadViews } from "@/features/preview/views";
 import { QuickOpen } from "@/features/quick-open/QuickOpen";
 import { ServersButton } from "@/features/servers/ServersButton";
@@ -158,6 +159,7 @@ const ShellBody = memo(function ShellBody({ root }: { root: Workspace["root"] })
         </>
       )}
       <HelpDialog open={helpOpen} onOpenChange={setHelpOpen} />
+      <DefaultAppHost />
       <CommandPalette />
     </div>
   );

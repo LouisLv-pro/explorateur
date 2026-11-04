@@ -2,6 +2,7 @@
 import { app } from "./app";
 import { browser } from "./browser";
 import { common } from "./common";
+import { defaultApp } from "./defaultApp";
 import { editor } from "./editor";
 import { errors } from "./errors";
 import { files } from "./files";
@@ -18,6 +19,7 @@ export const en = {
   app,
   browser,
   common,
+  defaultApp,
   editor,
   errors,
   files,

@@ -58,6 +58,10 @@ pub enum AppError {
     /// Échec du navigateur intégré (webview impossible à créer ou à placer).
     #[error("navigateur : {0}")]
     Browser(String),
+    /// App lancée hors d'un paquet `.app` (`tauri dev`) : impossible d'en faire l'app par
+    /// défaut d'un type (spec `app-par-defaut.md`). Rien n'est demandé à macOS.
+    #[error("app lancée hors d'un paquet .app")]
+    NotBundled,
     /// Autre erreur d'entrée-sortie.
     #[error("lecture du disque : {0}")]
     Io(String),

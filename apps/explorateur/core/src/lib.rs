@@ -3,6 +3,7 @@
 pub mod apps;
 pub mod browser;
 pub mod db;
+pub mod default_app;
 pub mod error;
 pub mod files;
 pub mod folders;

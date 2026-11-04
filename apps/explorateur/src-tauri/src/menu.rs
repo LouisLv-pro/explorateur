@@ -3,7 +3,9 @@
 //! émet `save-file`. « Quitter » est une entrée maison : avec des modifications non
 //! enregistrées ou un processus en cours dans un terminal, elle demande confirmation au front
 //! (`quit-requested`) au lieu de quitter. Le menu naît en anglais ; le front le rebâtit dans
-//! sa langue par `set_language` (spec `langue-interface.md`).
+//! sa langue par `set_language` (spec `langue-interface.md`). « Définir comme app par
+//! défaut… » émet `default-app-requested` : le front ouvre son dialogue (spec
+//! `app-par-defaut.md`).
 
 use std::sync::atomic::Ordering;
 
@@ -22,6 +24,10 @@ const SAVE_FILE: &str = "save-file";
 const QUIT: &str = "quit";
 /// Événement émis vers le front quand il faut confirmer la sortie.
 pub const QUIT_REQUESTED: &str = "quit-requested";
+/// Identifiant de l'entrée « Définir comme app par défaut… ».
+const DEFAULT_APP: &str = "default-app";
+/// Événement émis vers le front pour ouvrir le dialogue de l'app par défaut.
+const DEFAULT_APP_REQUESTED: &str = "default-app-requested";
 
 /// Langue du menu natif, choisie par le front (spec `langue-interface.md`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize, specta::Type)]
@@ -42,6 +48,7 @@ pub struct MenuTexts {
     pub close_tab: &'static str,
     pub quit: &'static str,
     pub about: &'static str,
+    pub default_app: &'static str,
     pub services: &'static str,
     pub hide: &'static str,
     pub hide_others: &'static str,
@@ -68,6 +75,7 @@ pub const fn texts(lang: Lang) -> MenuTexts {
             close_tab: "Close Tab",
             quit: "Quit explorateur",
             about: "About explorateur",
+            default_app: "Make Default for File Types…",
             services: "Services",
             hide: "Hide explorateur",
             hide_others: "Hide Others",
@@ -90,6 +98,7 @@ pub const fn texts(lang: Lang) -> MenuTexts {
             close_tab: "Fermer l'onglet",
             quit: "Quitter explorateur",
             about: "À propos d'explorateur",
+            default_app: "Définir comme app par défaut…",
             services: "Services",
             hide: "Masquer explorateur",
             hide_others: "Masquer les autres",
@@ -114,6 +123,7 @@ pub fn build(app: &AppHandle, lang: Lang) -> tauri::Result<Menu<Wry>> {
     let close_tab = MenuItem::with_id(app, CLOSE_TAB, t.close_tab, true, Some("CmdOrCtrl+W"))?;
     // Le « Quitter » prédéfini termine l'app sans passer par nous : entrée maison.
     let quit = MenuItem::with_id(app, QUIT, t.quit, true, Some("CmdOrCtrl+Q"))?;
+    let default_app = MenuItem::with_id(app, DEFAULT_APP, t.default_app, true, None::<&str>)?;
 
     let app_menu = Submenu::with_items(
         app,
@@ -121,6 +131,8 @@ pub fn build(app: &AppHandle, lang: Lang) -> tauri::Result<Menu<Wry>> {
         true,
         &[
             &PredefinedMenuItem::about(app, Some(t.about), None)?,
+            &PredefinedMenuItem::separator(app)?,
+            &default_app,
             &PredefinedMenuItem::separator(app)?,
             &PredefinedMenuItem::services(app, Some(t.services))?,
             &PredefinedMenuItem::separator(app)?,
@@ -165,6 +177,7 @@ pub fn on_event(app: &AppHandle, event: MenuEvent) {
     let id = event.id().as_ref();
     match id {
         CLOSE_TAB | SAVE_FILE => emit(app, id),
+        DEFAULT_APP => emit(app, DEFAULT_APP_REQUESTED),
         QUIT => {
             if must_confirm_quit(app) {
                 emit(app, QUIT_REQUESTED);
@@ -204,7 +217,7 @@ mod tests {
     use super::{Lang, MenuTexts, texts};
 
     /// Tous les champs de `MenuTexts`, nommés, pour que l'échec dise lequel est vide.
-    fn fields(t: &MenuTexts) -> [(&'static str, &'static str); 20] {
+    fn fields(t: &MenuTexts) -> [(&'static str, &'static str); 21] {
         [
             ("file", t.file),
             ("edit", t.edit),
@@ -213,6 +226,7 @@ mod tests {
             ("close_tab", t.close_tab),
             ("quit", t.quit),
             ("about", t.about),
+            ("default_app", t.default_app),
             ("services", t.services),
             ("hide", t.hide),
             ("hide_others", t.hide_others),
@@ -287,6 +301,14 @@ mod tests {
             let fr_text = fr.iter().find(|(n, _)| *n == name).map(|(_, t)| *t);
             assert_ne!(en_text, fr_text, "{name} identique dans les deux langues");
         }
+    }
+
+    // Bug attrapé : « Définir comme app par défaut… » laissé en anglais (spec
+    // `app-par-defaut.md`).
+    #[test]
+    fn l_entree_app_par_defaut_suit_la_langue() {
+        assert_eq!(texts(Lang::En).default_app, "Make Default for File Types…");
+        assert_eq!(texts(Lang::Fr).default_app, "Définir comme app par défaut…");
     }
 
     // Bug attrapé : le nom de l'app traduit ou oublié dans « Quitter explorateur ».

@@ -13,6 +13,7 @@ export const errors: typeof en = {
   Remote: "{{detail}}",
   GithubUnavailable: "GitHub est indisponible.",
   IssueNotFound: "Issue introuvable.",
+  NotBundled: "Disponible dans l'app installée, pas en développement.",
   Gh: "{{detail}}",
   Browser: "Erreur du navigateur : {{detail}}",
   Io: "Erreur du disque : {{detail}}",

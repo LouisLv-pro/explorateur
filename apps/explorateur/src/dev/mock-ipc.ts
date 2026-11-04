@@ -93,6 +93,7 @@ import { browserHandlers, browserTools } from "./mock-browser";
 import { fakeReadMarks, markFakeRead, noteFakeChanges, setFakeReadRoot } from "./mock-last-read";
 import { fakeFinderOpen, fakeOpenLink, queueFromUrl, takeFakeOpened } from "./mock-finder";
 import { mockRunningCommands, terminalHandlers } from "./mock-shell";
+import { defaultAppHandlers, mockDefaultApp } from "./mock-default-app";
 
 type Handler = (args: Record<string, unknown>) => unknown;
 
@@ -152,6 +153,8 @@ const handlers: Record<string, Handler> = {
   ...terminalHandlers,
   // Navigateur intégré : pas de webview, voir mock-browser.ts.
   ...browserHandlers,
+  // App par défaut : voir mock-default-app.ts.
+  ...defaultAppHandlers,
   open_root: (args) => openRoot(args.path as string),
   list_recent_folders: () => recents.map(toRecent),
   remove_recent_folder: (args) => {
@@ -370,6 +373,8 @@ export function installMockIpc() {
   (window as unknown as { __mockMenu: unknown }).__mockMenu = {
     closeTab: () => void emit("close-tab"),
     save: () => void emit("save-file"),
+    // « Définir comme app par défaut… » du menu natif.
+    defaultApp: () => void emit("default-app-requested"),
     quit: () =>
       unsaved || mockRunningCommands().length > 0
         ? void emit("quit-requested")
@@ -407,6 +412,9 @@ export function installMockIpc() {
     set: setFakeGithub,
     templates: setFakeTemplates,
   };
+  // App par défaut : `refuse = ["public.yaml"]` fait refuser ces UTI ; `?notBundled=1` dans l'URL
+  // simule l'app lancée hors d'un paquet `.app`.
+  (window as unknown as { __mockDefaultApp: unknown }).__mockDefaultApp = mockDefaultApp;
   // Navigateur : `newWindow(url)` simule `target="_blank"` / `window.open` d'une page.
   (window as unknown as { __mockBrowser: unknown }).__mockBrowser = browserTools;
   // Apps natives : `noXcode()` fait échouer la liste des simulateurs (« Xcode introuvable » à

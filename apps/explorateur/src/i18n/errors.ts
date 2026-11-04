@@ -34,6 +34,8 @@ export function appErrorMessage(error: AppError): string {
       return i18n.t("errors:GithubUnavailable");
     case "IssueNotFound":
       return i18n.t("errors:IssueNotFound");
+    case "NotBundled":
+      return i18n.t("errors:NotBundled");
     case "Failed":
       return failureMessage(error.message);
     default:

@@ -5,6 +5,7 @@
 pub mod app;
 pub mod apps;
 pub mod browser;
+pub mod default_app;
 pub mod files;
 pub mod folders;
 pub mod git;
