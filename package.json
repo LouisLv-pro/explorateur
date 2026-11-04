@@ -1,0 +1,9 @@
+{
+  "name": "explorateur",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "typecheck": "pnpm -r --if-present typecheck"
+  }
+}

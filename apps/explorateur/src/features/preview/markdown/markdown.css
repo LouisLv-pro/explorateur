@@ -1,0 +1,114 @@
+/* Mise en page d'un document Markdown : rôles et variables du thème uniquement. */
+@reference "../../../index.css";
+
+.md {
+  @apply mx-auto max-w-190 px-8 py-10 text-body-md text-body;
+  overflow-wrap: anywhere;
+}
+
+.md > :first-child {
+  @apply mt-0;
+}
+
+.md h1 {
+  @apply mt-10 mb-4 text-display-md text-ink;
+}
+.md h2 {
+  @apply mt-8 mb-3 border-b border-hairline pb-2 text-display-sm text-ink;
+}
+.md h3 {
+  @apply mt-6 mb-2 text-body-lg font-semibold text-ink;
+}
+.md h4,
+.md h5,
+.md h6 {
+  @apply mt-5 mb-2 text-body-md-strong text-ink;
+}
+
+.md p {
+  @apply my-4;
+}
+
+.md ul {
+  @apply my-4 list-disc pl-6;
+}
+.md ol {
+  @apply my-4 list-decimal pl-6;
+}
+.md li {
+  @apply my-1;
+}
+.md li > ul,
+.md li > ol {
+  @apply my-1;
+}
+.md ul.contains-task-list {
+  @apply list-none pl-0;
+}
+.md .task-list-item input {
+  @apply mr-2 align-middle accent-ink;
+}
+
+.md a {
+  @apply cursor-pointer text-link underline underline-offset-2 hover:text-link-deep;
+}
+
+/* `#123` : lien d'issue, souligné au survol seulement (spec issues-github.md, lot 3). */
+.md a.issue-ref {
+  @apply no-underline hover:underline;
+}
+
+.md :not(pre) > code {
+  @apply rounded-xs bg-canvas-soft-2 px-1 py-0.5 font-mono text-code text-ink;
+}
+
+.md blockquote {
+  @apply my-4 border-l-2 border-hairline-strong pl-4 text-mute;
+}
+
+.md table {
+  @apply my-4 w-full border-collapse text-body-sm;
+}
+.md th,
+.md td {
+  @apply border border-hairline px-3 py-2 text-left;
+}
+.md th {
+  @apply bg-canvas-soft font-medium text-ink;
+}
+
+.md hr {
+  @apply my-8 border-hairline;
+}
+
+.md img {
+  @apply inline-block max-w-full;
+}
+
+.md del {
+  @apply text-mute;
+}
+
+/* HTML brut (spec html-brut-markdown.md). */
+.md kbd {
+  @apply rounded-xs border border-hairline bg-canvas-soft px-1 py-0.5 font-mono text-code text-ink;
+}
+
+.md details {
+  @apply my-4;
+}
+.md summary {
+  @apply cursor-pointer font-medium text-ink;
+}
+.md details[open] > summary {
+  @apply mb-2;
+}
+/* `sup` et `sub` : taille réduite et interligne neutre par le preflight de Tailwind. */
+
+.md .footnotes {
+  @apply mt-8 border-t border-hairline pt-4 text-body-sm text-mute;
+}
+
+.md .sr-only {
+  @apply sr-only;
+}

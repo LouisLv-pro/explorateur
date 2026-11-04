@@ -1,0 +1,70 @@
+[workspace]
+resolver = "3"
+members = [
+    "apps/explorateur/core",
+    "apps/explorateur/src-tauri",
+]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.98"
+publish = false
+license = "MIT"
+
+# Versions communes : une app écrit `serde = { workspace = true }`.
+[workspace.dependencies]
+tauri = "2"
+tauri-build = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio", "sqlite", "macros", "migrate"] }
+thiserror = "2"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# Release candidates : versions figées car l'API change entre deux rc.
+specta = { version = "=2.0.0-rc.25", features = ["derive"] }
+tauri-specta = { version = "=2.0.0-rc.25", features = ["derive", "typescript"] }
+specta-typescript = "=0.0.12"
+specta-serde = "=0.0.12"
+proptest = "1"
+uuid = { version = "1", features = ["v4"] }
+# Dates sans fuseau (`NaiveDate`). Aucune feature : pas d'horloge (`clock`, `now`), core ne lit jamais l'heure.
+chrono = { version = "0.4", default-features = false }
+# Décodage des URL `%xx` (protocole `preview` d'explorateur). Déjà tiré par Tauri.
+percent-encoding = "2"
+# Décomposition Unicode (NFD), pour la recherche sans accents.
+unicode-normalization = { version = "0.1", default-features = false, features = ["std"] }
+# Lecture YAML 1.2 (front matter des notes de memo, décision 0002 de l'app). `serde_yaml` est archivée.
+saphyr = "0.2"
+# Surveillance du disque (FSEvents sur macOS), pour le rechargement automatique d'explorateur.
+notify = "8"
+# Mise à la corbeille (NSFileManager sur macOS), jamais de suppression définitive : explorateur.
+trash = "5"
+# Pseudo-terminal (celui de WezTerm) : terminal intégré d'explorateur (décision 0006 de l'app).
+portable-pty = "0.9"
+# Diff de caractères (mots surlignés des diffs git d'explorateur, décision 0007 de l'app).
+similar = "3"
+# Lecture des Cargo.toml (apps Rust d'explorateur, décision 0023 de l'app). Parsing seul, déjà tiré par Tauri.
+toml = { version = "1", default-features = false, features = ["parse", "serde"] }
+
+# Chaque crate hérite de ces lints avec `[lints] workspace = true`.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+# Un panic ferme l'app : les erreurs passent par Result (autorisés dans les tests, voir clippy.toml).
+unwrap_used = "warn"
+expect_used = "warn"
+dbg_macro = "warn"
+
+# Profil de release commun (Cargo ignore les profils déclarés dans les crates membres).
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

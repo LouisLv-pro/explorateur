@@ -1,0 +1,227 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "explorateur",
+  "version": "0.1.0",
+  "identifier": "app.explorateur.mac",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "explorateur",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 720,
+        "minHeight": 480,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' ipc: http://ipc.localhost; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: asset: http://asset.localhost; frame-src asset: http://asset.localhost preview: http://preview.localhost http://localhost:* http://127.0.0.1:*",
+      "assetProtocol": {
+        "enable": true,
+        "scope": { "allow": ["**"], "requireLiteralLeadingDot": false }
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "DeveloperTool",
+    "shortDescription": "Control room next to your coding agent",
+    "copyright": "Copyright (c) 2026 Louis Laville. MIT License.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "../scripts/explorateur": "bin/explorateur"
+    },
+    "fileAssociations": [
+      {
+        "name": "Text and Markdown",
+        "ext": [
+          "md",
+          "markdown",
+          "html",
+          "htm",
+          "txt",
+          "log",
+          "csv",
+          "json",
+          "yaml",
+          "yml",
+          "toml",
+          "xml",
+          "ini"
+        ],
+        "contentTypes": [
+          "public.plain-text",
+          "net.daringfireball.markdown",
+          "public.html",
+          "public.xml",
+          "public.json",
+          "public.yaml",
+          "public.toml",
+          "com.microsoft.ini",
+          "com.apple.log",
+          "public.comma-separated-values-text"
+        ],
+        "role": "Editor",
+        "rank": "Alternate"
+      },
+      {
+        "name": "Code",
+        "ext": [
+          "ts",
+          "tsx",
+          "js",
+          "mjs",
+          "py",
+          "swift",
+          "rb",
+          "php",
+          "java",
+          "c",
+          "h",
+          "cpp",
+          "hpp",
+          "sh",
+          "bash",
+          "zsh",
+          "css",
+          "sql"
+        ],
+        "role": "Editor",
+        "rank": "Alternate"
+      },
+      {
+        "name": "JSONC",
+        "ext": ["jsonc"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.jsonc",
+          "conformsTo": ["public.plain-text"]
+        }
+      },
+      {
+        "name": "Configuration",
+        "ext": ["conf"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.conf",
+          "conformsTo": ["public.plain-text"]
+        }
+      },
+      {
+        "name": "JSX",
+        "ext": ["jsx"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.jsx",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "CommonJS",
+        "ext": ["cjs"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.cjs",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "Rust",
+        "ext": ["rs"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.rs",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "Kotlin",
+        "ext": ["kt"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.kt",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "Go",
+        "ext": ["go"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.go",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "C#",
+        "ext": ["cs"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.cs",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "SCSS",
+        "ext": ["scss"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.scss",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "Lua",
+        "ext": ["lua"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.lua",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "Vue",
+        "ext": ["vue"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.vue",
+          "conformsTo": ["public.source-code"]
+        }
+      },
+      {
+        "name": "Svelte",
+        "ext": ["svelte"],
+        "role": "Editor",
+        "rank": "Alternate",
+        "exportedType": {
+          "identifier": "app.explorateur.mac.svelte",
+          "conformsTo": ["public.source-code"]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+/* Pastille de couleur (spec pastilles-couleur.md), partagée par l'aperçu Markdown, les blocs
+   de code et l'éditeur. Décorative : non sélectionnable, donc absente du texte copié. */
+@reference "../../index.css";
+
+.color-swatch {
+  @apply inline-block rounded-xs border border-hairline-strong;
+  box-sizing: border-box;
+  width: 0.75em;
+  height: 0.75em;
+  margin-right: 0.25em;
+  vertical-align: -0.05em;
+  user-select: none;
+  -webkit-user-select: none;
+}

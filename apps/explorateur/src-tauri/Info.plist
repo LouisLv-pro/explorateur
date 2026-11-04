@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Fusionné par Tauri dans l'Info.plist de l'app. Schéma explorateur:// (décision 0013). -->
+<plist version="1.0">
+<dict>
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLName</key>
+      <string>app.explorateur.mac</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>explorateur</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

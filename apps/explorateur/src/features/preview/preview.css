@@ -1,0 +1,12 @@
+/* Damier discret derrière les images (transparence visible). */
+.checker {
+  --checker-size: 16px;
+  background-color: var(--color-canvas);
+  background-image: conic-gradient(
+    var(--color-canvas-soft-2) 25%,
+    transparent 0 50%,
+    var(--color-canvas-soft-2) 0 75%,
+    transparent 0
+  );
+  background-size: var(--checker-size) var(--checker-size);
+}

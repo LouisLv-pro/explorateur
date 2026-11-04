@@ -1,0 +1,17 @@
+/* Corps d'issue : le style de l'aperçu Markdown, sans sa marge de page. */
+@reference "../../index.css";
+
+.md.issue-md {
+  @apply max-w-none p-0 text-body-sm;
+}
+.md.issue-md h1,
+.md.issue-md h2 {
+  @apply mt-6 mb-2 text-body-lg;
+}
+.md.issue-md h3,
+.md.issue-md h4 {
+  @apply mt-4 mb-2 text-body-md-strong;
+}
+.md.issue-md p {
+  @apply my-2;
+}

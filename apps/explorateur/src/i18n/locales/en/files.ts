@@ -1,0 +1,50 @@
+// Actions sur les fichiers, dernière lecture (docs/specs/langue-interface.md).
+export const files = {
+  actions: {
+    menu: "Actions",
+    reveal: "Show in Finder",
+    open: "Open with Default App",
+    copyPath: "Copy Path",
+    copyRelative: "Copy Relative Path",
+    trash: "Move to Trash",
+  },
+  pathCopied: "Path copied",
+  fileGone: "This file no longer exists.",
+  errors: {
+    exists: "An item with this name already exists.",
+    invalidName: "Invalid name.",
+    gone: "This item no longer exists.",
+    denied: "Access denied by macOS.",
+  },
+  trash: {
+    title: "Move “{{name}}” to the Trash?",
+    file: "The file will be moved to the Trash.",
+    folder: "The folder and all its contents will be moved to the Trash.",
+    unsaved: " Unsaved changes will be lost.",
+    confirm: "Move to Trash",
+  },
+  codeLinks: {
+    createIssue: "Create Issue from Selection",
+    copyLink: "Copy GitHub Link",
+    noSelection: "No selection: show the file source in the editor.",
+    linkFailed: "GitHub link unavailable: file or repository not found.",
+    notCommitted: "This file is not in a commit yet.",
+    copied: "GitHub link copied",
+    copiedWithWarning: "GitHub link copied. {{warning}}",
+  },
+  lastRead: {
+    changed: "Changed since you last read it",
+    dirChanged: "Contains files changed since you last read them",
+    noDiff: "Changed since you last read it. Diff unavailable for this file.",
+    noBaseline:
+      "Created or changed during this session. No earlier version read: nothing to compare.",
+    showFile: "Show File",
+    showChanges: "Show Changes",
+    dismiss: "Dismiss",
+    diffUnavailable: "Diff unavailable for this file.",
+    showDiff_one: "Show diff ({{count}} line)",
+    showDiff_other: "Show diff ({{count}} lines)",
+    hidden_one: "{{count}} line",
+    hidden_other: "{{count}} lines",
+  },
+};

@@ -1,0 +1,362 @@
+/* Généré par scripts/build-tokens.js depuis DESIGN.md. Ne pas éditer : lancer pnpm tokens. */
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Espacements : l'unité Tailwind vaut 4px, comme la base de DESIGN.md, donc chaque token
+ * a son équivalent natif (p-4 = spacing.md). Correspondances : xxs 4px = 1, xs 8px = 2, sm 12px = 3, md 16px = 4, lg 24px = 6, xl 32px = 8, 2xl 40px = 10, 3xl 48px = 12, 4xl 64px = 16, 5xl 96px = 24, 6xl 128px = 32, section 192px = 48.
+ */
+@theme {
+  --spacing: 4px;
+
+  --color-on-primary: #ffffff;
+  --color-ink: #171717;
+  --color-body: #4d4d4d;
+  --color-mute: #888888;
+  --color-hairline: #ebebeb;
+  --color-hairline-strong: #a1a1a1;
+  --color-canvas: #ffffff;
+  --color-canvas-soft: #fafafa;
+  --color-canvas-soft-2: #f5f5f5;
+  --color-link: #0070f3;
+  --color-link-deep: #0761d1;
+  --color-link-bg-soft: #d3e5ff;
+  --color-success: #0070f3;
+  --color-error: #ee0000;
+  --color-error-soft: #f7d4d6;
+  --color-error-deep: #c50000;
+  --color-warning: #f5a623;
+  --color-warning-soft: #ffefcf;
+  --color-warning-deep: #ab570a;
+  --color-violet: #7928ca;
+  --color-violet-soft: #d8ccf1;
+  --color-violet-deep: #4c2889;
+  --color-cyan: #50e3c2;
+  --color-cyan-soft: #aaffec;
+  --color-cyan-deep: #29bc9b;
+  --color-highlight-pink: #ff0080;
+  --color-highlight-magenta: #eb367f;
+  --color-gradient-develop-start: #007cf0;
+  --color-gradient-develop-end: #00dfd8;
+  --color-gradient-preview-start: #7928ca;
+  --color-gradient-preview-end: #ff0080;
+  --color-gradient-ship-start: #ff4d4d;
+  --color-gradient-ship-end: #f9cb28;
+  --color-selection-bg: #171717;
+  --color-selection-fg: #f2f2f2;
+  --color-diff-added: #f3fcf5;
+  --color-diff-added-strong: #e3f7e9;
+  --color-diff-removed: #fff7f7;
+  --color-diff-removed-strong: #ffefef;
+  --color-vcs-added: #1a7f37;
+  --color-vcs-modified: #8a5c00;
+  --color-vcs-deleted: #c50000;
+  --color-vcs-untracked: #00756f;
+  --color-vcs-conflict: #b0237a;
+  --color-vcs-ignored: #6b6b6b;
+  --color-issue-open: #1a7f37;
+  --color-issue-closed: #8250df;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: "Geist Variable", Geist, Inter, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: var(--font-sans);
+  --text-display-xl: 48px;
+  --text-display-xl--line-height: 48px;
+  --text-display-xl--font-weight: 600;
+  --text-display-xl--letter-spacing: -2.4px;
+  --text-display-lg: 32px;
+  --text-display-lg--line-height: 40px;
+  --text-display-lg--font-weight: 600;
+  --text-display-lg--letter-spacing: -1.28px;
+  --text-display-md: 24px;
+  --text-display-md--line-height: 32px;
+  --text-display-md--font-weight: 600;
+  --text-display-md--letter-spacing: -0.96px;
+  --text-display-sm: 20px;
+  --text-display-sm--line-height: 28px;
+  --text-display-sm--font-weight: 600;
+  --text-display-sm--letter-spacing: -0.6px;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+  --text-body-lg--letter-spacing: 0px;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+  --text-body-md-strong: 16px;
+  --text-body-md-strong--line-height: 24px;
+  --text-body-md-strong--font-weight: 500;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+  --text-body-sm--letter-spacing: -0.28px;
+  --text-body-sm-strong: 14px;
+  --text-body-sm-strong--line-height: 20px;
+  --text-body-sm-strong--font-weight: 500;
+  --text-body-sm-strong--letter-spacing: -0.28px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 400;
+  --text-caption-mono: 12px;
+  --text-caption-mono--line-height: 16px;
+  --text-caption-mono--font-weight: 400;
+  --text-code: 13px;
+  --text-code--line-height: 20px;
+  --text-code--font-weight: 400;
+  --text-button-md: 14px;
+  --text-button-md--line-height: 20px;
+  --text-button-md--font-weight: 500;
+  --text-button-lg: 16px;
+  --text-button-lg--line-height: 24px;
+  --text-button-lg--font-weight: 500;
+  --radius-none: 0px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill-sm: 64px;
+  --radius-pill: 100px;
+  --radius-full: 9999px;
+  --shadow-level-1: var(--elevation-level-1);
+  --shadow-level-2: var(--elevation-level-2);
+  --shadow-level-3: var(--elevation-level-3);
+  --shadow-level-4: var(--elevation-level-4);
+  --shadow-level-5: var(--elevation-level-5);
+}
+
+/*
+ * Rôles de syntaxe et de séries de diagrammes (DESIGN.md, Syntax et Chart series) : lus seulement par var(), jamais par une classe.
+ * Tailwind n'émet une variable de @theme que si une classe s'en sert : l'option `static`
+ * les émet toujours.
+ */
+@theme static {
+  --color-syntax-keyword: #7928ca;
+  --color-syntax-string: #1a7f37;
+  --color-syntax-number: #ab570a;
+  --color-syntax-function: #0761d1;
+  --color-syntax-type: #00756f;
+  --color-syntax-property: #7a6200;
+  --color-syntax-tag: #c50000;
+  --color-syntax-macro: #b0237a;
+  --color-syntax-comment: #6b6b6b;
+  --color-series-1: #0761d1;
+  --color-series-2: #ab570a;
+  --color-series-3: #1a7f37;
+  --color-series-4: #c50000;
+  --color-series-5: #00756f;
+  --color-series-6: #7928ca;
+  --color-series-7: #b0237a;
+  --color-series-8: #7a6200;
+}
+
+/* Rôles shadcn/ui du thème clair. */
+:root {
+  color-scheme: light;
+
+  --background: #fafafa;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #4d4d4d;
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  --destructive: #ee0000;
+  --border: #ebebeb;
+  --input: #ebebeb;
+  --ring: #0070f3;
+  --chart-1: #007cf0;
+  --chart-2: #7928ca;
+  --chart-3: #ff4d4d;
+  --chart-4: #29bc9b;
+  --chart-5: #f5a623;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: #171717;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #ebebeb;
+  --sidebar-ring: #0070f3;
+  --radius: 6px;
+  --elevation-level-1: inset 0 0 0 1px #00000014;
+  --elevation-level-2: 0 1px 1px #00000005, 0 2px 2px #0000000a, inset 0 0 0 1px #00000014;
+  --elevation-level-3: 0 2px 2px #0000000a, 0 8px 8px -8px #0000000a, inset 0 0 0 1px #00000014;
+  --elevation-level-4: 0 2px 2px #0000000a, 0 8px 16px -4px #0000000a, inset 0 0 0 1px #00000014;
+  --elevation-level-5:
+    0 1px 1px #00000005, 0 8px 16px -4px #0000000a, 0 24px 32px -8px #0000000f,
+    inset 0 0 0 1px #00000014;
+}
+
+/*
+ * Mode sombre (DESIGN.md, colors-dark) : actif quand <html> porte la classe `dark`.
+ * Redéfinit les couleurs de @theme, les ombres et les rôles shadcn.
+ */
+.dark {
+  color-scheme: dark;
+
+  --color-on-primary: #0a0a0a;
+  --color-ink: #ededed;
+  --color-body: #a1a1a1;
+  --color-mute: #8f8f8f;
+  --color-hairline: #2e2e2e;
+  --color-hairline-strong: #5c5c5c;
+  --color-canvas: #0a0a0a;
+  --color-canvas-soft: #000000;
+  --color-canvas-soft-2: #1a1a1a;
+  --color-link: #52a8ff;
+  --color-link-deep: #8ec5ff;
+  --color-link-bg-soft: #0d2847;
+  --color-success: #52a8ff;
+  --color-error: #ff6166;
+  --color-error-soft: #3c1618;
+  --color-error-deep: #ff9592;
+  --color-warning: #ffb224;
+  --color-warning-soft: #3a2805;
+  --color-warning-deep: #ffc96b;
+  --color-violet: #a371f7;
+  --color-violet-soft: #2c1a4a;
+  --color-violet-deep: #c79bf2;
+  --color-cyan: #50e3c2;
+  --color-cyan-soft: #0b3d33;
+  --color-cyan-deep: #29bc9b;
+  --color-highlight-pink: #ff0080;
+  --color-highlight-magenta: #f75f8f;
+  --color-gradient-develop-start: #007cf0;
+  --color-gradient-develop-end: #00dfd8;
+  --color-gradient-preview-start: #7928ca;
+  --color-gradient-preview-end: #ff0080;
+  --color-gradient-ship-start: #ff4d4d;
+  --color-gradient-ship-end: #f9cb28;
+  --color-selection-bg: #ededed;
+  --color-selection-fg: #0a0a0a;
+  --color-syntax-keyword: #c79bf2;
+  --color-syntax-string: #6cd68a;
+  --color-syntax-number: #ffa057;
+  --color-syntax-function: #52a8ff;
+  --color-syntax-type: #3fd3c3;
+  --color-syntax-property: #e2c35a;
+  --color-syntax-tag: #ff6166;
+  --color-syntax-macro: #f27bbd;
+  --color-syntax-comment: #8f8f8f;
+  --color-diff-added: #0b2014;
+  --color-diff-added-strong: #0f2d18;
+  --color-diff-removed: #2a1012;
+  --color-diff-removed-strong: #45181c;
+  --color-vcs-added: #6cd68a;
+  --color-vcs-modified: #e2c35a;
+  --color-vcs-deleted: #ff6166;
+  --color-vcs-untracked: #3fd3c3;
+  --color-vcs-conflict: #f27bbd;
+  --color-vcs-ignored: #8f8f8f;
+  --color-issue-open: #6cd68a;
+  --color-issue-closed: #ab7df8;
+  --color-series-1: #52a8ff;
+  --color-series-2: #ffa057;
+  --color-series-3: #6cd68a;
+  --color-series-4: #ff6166;
+  --color-series-5: #3fd3c3;
+  --color-series-6: #c79bf2;
+  --color-series-7: #f27bbd;
+  --color-series-8: #e2c35a;
+  --elevation-level-1: inset 0 0 0 1px #ffffff24;
+  --elevation-level-2: 0 1px 1px #0000003d, 0 2px 2px #0000003d, inset 0 0 0 1px #ffffff24;
+  --elevation-level-3: 0 2px 2px #0000003d, 0 8px 8px -8px #00000066, inset 0 0 0 1px #ffffff24;
+  --elevation-level-4: 0 2px 2px #0000003d, 0 8px 16px -4px #00000066, inset 0 0 0 1px #ffffff24;
+  --elevation-level-5:
+    0 1px 1px #0000003d, 0 8px 16px -4px #00000066, 0 24px 32px -8px #00000066,
+    inset 0 0 0 1px #ffffff24;
+  --background: #000000;
+  --foreground: #ededed;
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
+  --popover: #0a0a0a;
+  --popover-foreground: #ededed;
+  --primary: #ededed;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ededed;
+  --muted: #1a1a1a;
+  --muted-foreground: #a1a1a1;
+  --accent: #1a1a1a;
+  --accent-foreground: #ededed;
+  --destructive: #ff6166;
+  --border: #2e2e2e;
+  --input: #2e2e2e;
+  --ring: #52a8ff;
+  --chart-1: #007cf0;
+  --chart-2: #7928ca;
+  --chart-3: #ff4d4d;
+  --chart-4: #29bc9b;
+  --chart-5: #ffb224;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ededed;
+  --sidebar-primary: #ededed;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #ededed;
+  --sidebar-border: #2e2e2e;
+  --sidebar-ring: #52a8ff;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground text-body-md antialiased;
+  }
+
+  ::selection {
+    background: var(--color-selection-bg);
+    color: var(--color-selection-fg);
+  }
+
+  code,
+  kbd,
+  pre {
+    @apply font-mono;
+  }
+}

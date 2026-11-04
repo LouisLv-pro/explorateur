@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+/* Design de l'app, généré depuis DESIGN.md (pnpm tokens). */
+@import "./theme.css";
+
+/*
+ * Diagrammes Mermaid rendus par Pele (docs/specs/diagrammes-mermaid.md, décision workspace 0007) :
+ * le SVG lit ces variables, qui pointent vers les tokens de DESIGN.md. Le mode sombre redéfinit
+ * les tokens (`.dark`) : les diagrammes affichés changent de couleurs sans nouveau rendu. Le zoom de
+ * Pele n'a aucune transition : rien à couper sous `prefers-reduced-motion`.
+ */
+.pele {
+  --pele-bg: var(--color-canvas);
+  --pele-fg: var(--color-ink);
+  --pele-muted: var(--color-mute);
+  --pele-line: var(--color-body);
+  --pele-surface: var(--color-canvas-soft-2);
+  --pele-surface-alt: var(--color-canvas-soft);
+  --pele-border: var(--color-hairline-strong);
+  --pele-accent: var(--color-link);
+  --pele-critical: var(--color-error);
+  --pele-error: var(--color-error-deep);
+  --pele-font: var(--font-sans);
+  --pele-font-mono: var(--font-mono);
+  --pele-radius: var(--radius-sm);
+  --pele-series-1: var(--color-series-1);
+  --pele-series-2: var(--color-series-2);
+  --pele-series-3: var(--color-series-3);
+  --pele-series-4: var(--color-series-4);
+  --pele-series-5: var(--color-series-5);
+  --pele-series-6: var(--color-series-6);
+  --pele-series-7: var(--color-series-7);
+  --pele-series-8: var(--color-series-8);
+}
+
+/* Un diagramme plus petit que son conteneur garde sa taille naturelle, centré. */
+.mermaid-diagram > svg.pele {
+  margin-inline: auto;
+}
+
+/*
+ * Diagramme rétréci : les boutons de zoom de Pele (30 px, à 8 px du bord droit) ne recouvrent
+ * plus le diagramme, qui cède 40 px à droite. Pele retire ce padding de la largeur disponible : le
+ * diagramme reste rétréci, donc le panneau reste affiché (pas de boucle). Pele cache le panneau
+ * (`hidden`) sans le retirer quand le diagramme n'est plus rétréci : seul le panneau visible compte.
+ */
+.mermaid-diagram:has(> .pele-zoom:not([hidden])) {
+  padding-right: 40px;
+}
+
+/*
+ * Mode sombre (docs/specs/mode-sombre.md) : le changement de thème est instantané. La classe est
+ * posée par useTheme le temps du changement et coupe les transitions des composants : sinon
+ * leurs couleurs glissent pendant que le reste bascule.
+ */
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}

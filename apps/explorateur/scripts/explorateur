@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# Ouvre un dossier ou un fichier dans explorateur, à une ligne (spec ouvrir-depuis-terminal.md).
+#
+#   explorateur                      le dossier courant
+#   explorateur src/lib.rs:40        le fichier, à la ligne 40
+#   explorateur src/lib.rs:40:7      ligne 40, colonne 7
+#
+# Le chemin devient absolu puis passe par le lien `explorateur://open?path=…` : macOS le remet à
+# l'app déjà ouverte, ou la lance. Le suffixe `:ligne:colonne` est lu par l'app (décision 0013).
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage : explorateur [--print-url] [chemin[:ligne[:colonne]]]
+
+Ouvre le chemin (le dossier courant par défaut) dans explorateur.
+  --print-url   affiche le lien sans rien ouvrir
+  -h, --help    cette aide
+EOF
+}
+
+# Encodage en pourcentage, octet par octet : lettres, chiffres et `-._~/:` gardés.
+encode() {
+  local LC_ALL=C text="$1" out="" char i
+  for ((i = 0; i < ${#text}; i++)); do
+    char="${text:i:1}"
+    case "$char" in
+      [a-zA-Z0-9.~_/:-]) out+="$char" ;;
+      # `'x` donne le code de l'octet, négatif au-delà de 127 sous bash 3.2 : masqué.
+      *) out+="$(printf '%%%02X' $(($(printf '%d' "'$char") & 255)))" ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
+print_only=false
+paths=()
+for arg in "$@"; do
+  case "$arg" in
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    --print-url) print_only=true ;;
+    -*)
+      usage >&2
+      exit 2
+      ;;
+    *) paths+=("$arg") ;;
+  esac
+done
+
+if ((${#paths[@]} > 1)); then
+  echo "Un seul chemin à la fois." >&2
+  exit 2
+fi
+
+path="${paths[0]:-.}"
+[[ "$path" == /* ]] || path="$PWD/$path"
+url="explorateur://open?path=$(encode "$path")"
+
+if $print_only; then
+  echo "$url"
+  exit 0
+fi
+
+open "$url" 2>/dev/null || {
+  echo "explorateur n'est pas installée (le schéma explorateur:// est inconnu de macOS)." >&2
+  exit 1
+}

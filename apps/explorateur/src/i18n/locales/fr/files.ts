@@ -1,0 +1,50 @@
+import type { files as en } from "../en/files";
+
+export const files: typeof en = {
+  actions: {
+    menu: "Actions",
+    reveal: "Afficher dans le Finder",
+    open: "Ouvrir avec l'app par défaut",
+    copyPath: "Copier le chemin",
+    copyRelative: "Copier le chemin relatif",
+    trash: "Mettre à la corbeille",
+  },
+  pathCopied: "Chemin copié",
+  fileGone: "Ce fichier n'existe plus.",
+  errors: {
+    exists: "Un élément porte déjà ce nom.",
+    invalidName: "Nom invalide.",
+    gone: "Cet élément n'existe plus.",
+    denied: "Accès refusé par macOS.",
+  },
+  trash: {
+    title: "Mettre « {{name}} » à la corbeille ?",
+    file: "Le fichier ira à la corbeille.",
+    folder: "Le dossier et tout son contenu iront à la corbeille.",
+    unsaved: " Les modifications non enregistrées seront perdues.",
+    confirm: "Mettre à la corbeille",
+  },
+  codeLinks: {
+    createIssue: "Créer une issue depuis la sélection",
+    copyLink: "Copier le lien GitHub",
+    noSelection: "Aucune sélection : affichez la source du fichier dans l'éditeur.",
+    linkFailed: "Lien GitHub impossible : fichier ou dépôt introuvable.",
+    notCommitted: "Ce fichier n'est pas encore dans un commit.",
+    copied: "Lien GitHub copié",
+    copiedWithWarning: "Lien GitHub copié. {{warning}}",
+  },
+  lastRead: {
+    changed: "Modifié depuis votre dernière lecture",
+    dirChanged: "Contient des fichiers modifiés depuis votre dernière lecture",
+    noDiff: "Modifié depuis votre dernière lecture. Diff indisponible pour ce fichier.",
+    noBaseline: "Créé ou modifié pendant la session. Aucune version lue avant : rien à comparer.",
+    showFile: "Voir le fichier",
+    showChanges: "Voir les changements",
+    dismiss: "Masquer",
+    diffUnavailable: "Diff indisponible pour ce fichier.",
+    showDiff_one: "Afficher le diff ({{count}} ligne)",
+    showDiff_other: "Afficher le diff ({{count}} lignes)",
+    hidden_one: "{{count}} ligne",
+    hidden_other: "{{count}} lignes",
+  },
+};

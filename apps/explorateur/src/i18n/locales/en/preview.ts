@@ -1,0 +1,86 @@
+// Aperçus (features/preview) : en-tête, modes d'affichage, messages, données (tableau, arbre),
+// Markdown, Mermaid et tailles de fichier.
+export const preview = {
+  empty: {
+    choose: "Choose a file in the tree.",
+    quickOpen: "⌘P to find a file",
+  },
+  header: {
+    display: "View",
+    outlineHint: "Outline ({{shortcut}})",
+    reload: "Reload",
+    modeHint: "{{mode}} ({{shortcut}})",
+  },
+  modes: {
+    rendered: "Preview",
+    split: "Split",
+    source: "Source",
+  },
+  sourceUnavailable: "Source unavailable: file over 2 MB",
+  loading: "Loading",
+  frameTitle: "Preview of {{name}}",
+  tooLarge: "File too large to preview ({{size}}, limit 2 MB).",
+  binary: "Preview unavailable: binary file.",
+  readError: {
+    notFound: "This file no longer exists.",
+    permissionDenied: "Access denied: macOS doesn't allow reading this file.",
+    notAFile: "This path is a folder, not a file.",
+    other: "Couldn't read this file.",
+  },
+  image: {
+    unreadable: "Couldn't read this image.",
+  },
+  codeBlock: {
+    copy: "Copy",
+    copied: "Copied",
+    copyCode: "Copy code",
+  },
+  size: {
+    b: "B",
+    kb: "KB",
+    mb: "MB",
+    gb: "GB",
+  },
+  data: {
+    empty: "Empty file.",
+    label: "Data",
+    expandAll: "Expand All",
+    collapseAll: "Collapse All",
+    expand: "Expand",
+    collapse: "Collapse",
+    invalid: "Invalid {{type}}: {{message}}{{place}}",
+    atLine: " (line {{line}})",
+    atLineColumn: " (line {{line}}, column {{column}})",
+    unterminatedQuote: "unterminated quote",
+  },
+  table: {
+    rows_zero: "{{n}} rows",
+    rows_one: "{{n}} row",
+    rows_other: "{{n}} rows",
+    columns_zero: "{{n}} columns",
+    columns_one: "{{n}} column",
+    columns_other: "{{n}} columns",
+    delimiter: "delimiter: {{name}}",
+    footer: "{{rows}} · {{columns}} · {{delimiter}}",
+    delimiters: {
+      comma: "comma",
+      semicolon: "semicolon",
+      tab: "tab",
+      pipe: "pipe",
+    },
+  },
+  outline: {
+    title: "Outline",
+  },
+  markdown: {
+    openFailed: "Couldn't open: {{target}}",
+    linkNotFound: "Link not found: {{target}}",
+    openIssue: "Open #{{number}}",
+  },
+  mermaid: {
+    unavailable: "Diagram unavailable.",
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    reset: "Reset zoom",
+  },
+};

@@ -1,0 +1,13 @@
+/* Arbre JSON / YAML (docs/specs/apercu-donnees.md) : les rôles de syntaxe de DESIGN.md, lus par
+   var() comme dans highlight.ts et editor/theme.ts. Le thème sombre suit sans autre règle. */
+.data-string {
+  color: var(--color-syntax-string);
+}
+
+.data-number {
+  color: var(--color-syntax-number);
+}
+
+.data-property {
+  color: var(--color-syntax-property);
+}
