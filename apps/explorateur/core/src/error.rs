@@ -62,6 +62,16 @@ pub enum AppError {
     /// défaut d'un type (spec `app-par-defaut.md`). Rien n'est demandé à macOS.
     #[error("app lancée hors d'un paquet .app")]
     NotBundled,
+    /// Noyau Jupyter inconnu (identifiant jamais donné, déjà arrêté, ou mort).
+    #[error("noyau introuvable")]
+    KernelNotFound,
+    /// Le noyau n'a pas démarré (sorti tout de suite, ou muet pendant 30 s). Porte la fin de
+    /// sa sortie d'erreur telle quelle (ou son statut de sortie si elle est vide).
+    #[error("démarrage du noyau : {0}")]
+    KernelStartFailed(String),
+    /// Environnement Python introuvable, ou sans `ipykernel` (spec `notebook.md`).
+    #[error("aucun Python avec ipykernel")]
+    NoPythonEnv,
     /// Autre erreur d'entrée-sortie.
     #[error("lecture du disque : {0}")]
     Io(String),

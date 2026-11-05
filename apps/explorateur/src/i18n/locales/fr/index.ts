@@ -9,6 +9,7 @@ import { errors } from "./errors";
 import { files } from "./files";
 import { git } from "./git";
 import { issues } from "./issues";
+import { notebook } from "./notebook";
 import { preview } from "./preview";
 import { search } from "./search";
 import { servers } from "./servers";
@@ -26,6 +27,7 @@ export const fr: typeof en = {
   files,
   git,
   issues,
+  notebook,
   preview,
   search,
   servers,

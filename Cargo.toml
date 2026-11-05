@@ -57,6 +57,12 @@ block2 = { version = "0.6", default-features = false, features = ["std"] }
 objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSBundle", "NSError", "NSString", "NSURL"] }
 objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "block2", "objc2-uniform-type-identifiers", "NSWorkspace"] }
 objc2-uniform-type-identifiers = { version = "0.3", default-features = false, features = ["std", "UTType"] }
+# Client ZeroMQ des noyaux Jupyter (notebooks d'explorateur, décision 0024 de l'app). Versions figées.
+jupyter-zmq-client = "=3.0.1"
+# Types des messages Jupyter, même projet `runtimed` que le client.
+jupyter-protocol = "=2.0.3"
+# ZeroMQ en Rust, tiré par jupyter-zmq-client : seulement pour lire les messages bruts (JSON intact).
+zeromq = { version = "=0.7.0", default-features = false }
 
 # Chaque crate hérite de ces lints avec `[lints] workspace = true`.
 [workspace.lints.rust]

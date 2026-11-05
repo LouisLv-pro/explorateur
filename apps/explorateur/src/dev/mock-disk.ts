@@ -10,6 +10,7 @@ import type {
   FilePreview,
   PreviewKind,
 } from "@/bindings";
+import { ANALYSE_IPYNB, INVALIDE_IPYNB, VIDE_IPYNB } from "./mock-notebooks";
 
 export const HOME = "/Users/alex";
 export const DEMO_ROOT = `${HOME}/Projets/demo`;
@@ -548,9 +549,24 @@ const commandes = dir({
   }),
 });
 
+/**
+ * Notebooks Jupyter (spec notebook.md), à part de `demo` dont les tests figent le contenu. Le
+ * `.venv` n'est qu'un décor : le faux `list_python_envs` répond sans lire le disque.
+ */
+export const NOTEBOOKS_ROOT = `${HOME}/Projets/notebooks`;
+
+const notebooks = dir({
+  "analyse.ipynb": file(ANALYSE_IPYNB),
+  "vide.ipynb": file(VIDE_IPYNB),
+  "invalide.ipynb": file(INVALIDE_IPYNB),
+  ".venv": dir({ bin: dir({ python: file("") }) }),
+});
+
 /** Racine du faux disque. */
 export const disk: FakeNode = dir({
-  Users: dir({ alex: dir({ Projets: dir({ demo, web, commandes, mobile, flutter }) }) }),
+  Users: dir({
+    alex: dir({ Projets: dir({ demo, web, commandes, mobile, flutter, notebooks }) }),
+  }),
 });
 
 /** Nœud au chemin absolu `path`, ou `undefined`. */
@@ -577,6 +593,7 @@ export function previewKindOf(name: string): PreviewKind {
   if (["png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico"].includes(ext))
     return "image";
   if (ext === "pdf") return "pdf";
+  if (ext === "ipynb") return "notebook";
   return "text";
 }
 
@@ -701,6 +718,8 @@ export function openFakeFile(path: string): FilePreview {
       return { ...base, content: { kind: "Image" } };
     case "pdf":
       return { ...base, content: { kind: "Pdf" } };
+    case "notebook":
+      return { ...base, content: { kind: "Notebook", text } };
     case "text":
       return { ...base, content: { kind: "Text", text } };
   }

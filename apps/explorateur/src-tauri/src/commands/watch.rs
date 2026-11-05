@@ -24,6 +24,8 @@ pub fn watch_root(
     stop(&state);
     // Nouveau dossier racine : pastilles « jamais lu » effacées (spec derniere-lecture.md).
     last_read::lock(&state.reads).set_root(&path);
+    // Et noyaux des notebooks de l'ancien dossier arrêtés (spec notebook.md).
+    state.notebooks.set_root(&path);
     let watcher = RootWatcher::start(&path, move |change| {
         // Pastilles à jour avant que le front ne les relise sur `DiskChanged`.
         last_read::lock(&app.state::<AppState>().reads).note_changes(&change.files);

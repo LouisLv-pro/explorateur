@@ -22,6 +22,7 @@ import {
   FLUTTER_ROOT,
   HOME,
   MOBILE_ROOT,
+  NOTEBOOKS_ROOT,
   createFakeEntry,
   findFakeFiles,
   findNode,
@@ -94,6 +95,7 @@ import { fakeReadMarks, markFakeRead, noteFakeChanges, setFakeReadRoot } from ".
 import { fakeFinderOpen, fakeOpenLink, queueFromUrl, takeFakeOpened } from "./mock-finder";
 import { mockRunningCommands, terminalHandlers } from "./mock-shell";
 import { defaultAppHandlers, mockDefaultApp } from "./mock-default-app";
+import { kernelHandlers, kernelTools } from "./mock-kernel";
 
 type Handler = (args: Record<string, unknown>) => unknown;
 
@@ -110,6 +112,7 @@ let recents: string[] = [
   COMMANDES_ROOT,
   MOBILE_ROOT,
   FLUTTER_ROOT,
+  NOTEBOOKS_ROOT,
   `${HOME}/Projets/ancien-site`,
 ];
 
@@ -155,6 +158,8 @@ const handlers: Record<string, Handler> = {
   ...browserHandlers,
   // App par défaut : voir mock-default-app.ts.
   ...defaultAppHandlers,
+  // Notebooks : faux environnements Python et faux noyau, voir mock-kernel.ts.
+  ...kernelHandlers,
   open_root: (args) => openRoot(args.path as string),
   list_recent_folders: () => recents.map(toRecent),
   remove_recent_folder: (args) => {
@@ -417,6 +422,8 @@ export function installMockIpc() {
   (window as unknown as { __mockDefaultApp: unknown }).__mockDefaultApp = mockDefaultApp;
   // Navigateur : `newWindow(url)` simule `target="_blank"` / `window.open` d'une page.
   (window as unknown as { __mockBrowser: unknown }).__mockBrowser = browserTools;
+  // Notebooks : `noPython()` (aucun Python avec ipykernel), `python()`, `die()` (noyau mort).
+  (window as unknown as { __mockKernel: unknown }).__mockKernel = kernelTools;
   // Apps natives : `noXcode()` fait échouer la liste des simulateurs (« Xcode introuvable » à
   // la prochaine ouverture du menu), `xcode()` la rétablit.
   (window as unknown as { __mockServers: unknown }).__mockServers = {

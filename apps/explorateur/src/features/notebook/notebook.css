@@ -1,0 +1,35 @@
+@reference "../../index.css";
+
+/* Markdown d'une cellule ou d'une sortie : sans la colonne centrée ni les marges de l'aperçu. */
+.md.nb-md {
+  @apply mx-0 max-w-none p-0;
+}
+
+/* Sortie `text/html` (tableaux pandas) : style « ex-data-table-cell » de DESIGN.md. */
+.nb-html {
+  @apply text-body-sm text-body;
+  overflow-wrap: anywhere;
+}
+.nb-html table {
+  @apply border-collapse;
+}
+.nb-html th,
+.nb-html td {
+  @apply border-b border-hairline px-3 py-1 text-left align-top;
+}
+.nb-html thead th {
+  @apply bg-canvas-soft py-1.5 text-caption-mono text-mute;
+}
+.nb-html tbody th {
+  @apply font-medium text-ink;
+}
+.nb-html td {
+  @apply text-right tabular-nums;
+}
+.nb-html a {
+  @apply text-link underline;
+}
+/* Comme les images de sortie : fond blanc dans les deux thèmes. */
+.nb-html img {
+  @apply inline-block max-w-full bg-output-surface;
+}

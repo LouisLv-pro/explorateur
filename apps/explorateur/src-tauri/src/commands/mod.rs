@@ -11,6 +11,7 @@ pub mod folders;
 pub mod git;
 pub mod github;
 pub mod last_read;
+pub mod notebook;
 pub mod opened;
 pub mod preview;
 pub mod search;

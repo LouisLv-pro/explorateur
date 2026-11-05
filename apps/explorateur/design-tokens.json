@@ -457,6 +457,13 @@
         "components": [0.478, 0.384, 0],
         "hex": "#7a6200"
       }
+    },
+    "output-surface": {
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1],
+        "hex": "#ffffff"
+      }
     }
   },
   "spacing": {

@@ -56,11 +56,12 @@ import { formatSize } from "./format";
 import { ImageView } from "./ImageView";
 import { Message } from "./Message";
 import { toggleOutlineShown, useOutlineShown } from "./markdown/outline";
-import { dataView, markdownView } from "./views";
+import { dataView, markdownView, notebookView } from "./views";
 
 // Markdown, tableaux et arbres de données : chargés à la demande ou préchargés (`views.ts`).
 const MarkdownView = markdownView.Component;
 const DataView = dataView.Component;
+const NotebookView = notebookView.Component;
 // Mermaid pèse lourd : chargé à la première ouverture d'un `.mmd`.
 const MermaidDiagram = lazy(() =>
   import("./mermaid/MermaidDiagram").then((m) => ({ default: m.MermaidDiagram })),
@@ -219,29 +220,32 @@ const FilePane = memo(function FilePane({ root, tab, modes, onMode }: PaneProps)
           {preview && <span>{formatSize(preview.size)}</span>}
           {kind !== undefined && (hasDisplayModes(kind) || kind === "LargeHtml") && (
             <div role="group" aria-label={t("header.display")} className="flex gap-0.5">
-              {MODES.map(([value, action]) => (
-                <ToggleButton
-                  key={value}
-                  pressed={mode === value}
-                  hint={t("header.modeHint", {
-                    mode: t(`modes.${value}`),
-                    shortcut: shortcutHint(action),
-                  })}
-                  // Grosse page HTML : seul l'aperçu existe, sa source n'est pas lue.
-                  unavailable={
-                    kind === "LargeHtml" && value !== "rendered"
-                      ? t("sourceUnavailable")
-                      : undefined
-                  }
-                  onPress={() => {
-                    // Même cible que le raccourci : Scindé et Source d'une grosse page HTML n'en ont pas.
-                    const target = modeTarget(kind, value);
-                    if (target !== null) onMode(target, value);
-                  }}
-                >
-                  {t(`modes.${value}`)}
-                </ToggleButton>
-              ))}
+              {/* Un notebook n'a pas de mode Scindé : Aperçu et Source seulement. */}
+              {MODES.filter(([value]) => kind !== "Notebook" || value !== "split").map(
+                ([value, action]) => (
+                  <ToggleButton
+                    key={value}
+                    pressed={mode === value}
+                    hint={t("header.modeHint", {
+                      mode: t(`modes.${value}`),
+                      shortcut: shortcutHint(action),
+                    })}
+                    // Grosse page HTML : seul l'aperçu existe, sa source n'est pas lue.
+                    unavailable={
+                      kind === "LargeHtml" && value !== "rendered"
+                        ? t("sourceUnavailable")
+                        : undefined
+                    }
+                    onPress={() => {
+                      // Même cible que le raccourci : Scindé et Source d'une grosse page HTML n'en ont pas.
+                      const target = modeTarget(kind, value);
+                      if (target !== null) onMode(target, value);
+                    }}
+                  >
+                    {t(`modes.${value}`)}
+                  </ToggleButton>
+                ),
+              )}
             </div>
           )}
           {outlineAvailable && (
@@ -487,6 +491,21 @@ function Body({
           mode={mode}
           source={source}
           rendered={<PageFrame stamp={pageStamp} name={name} src={pageUrl} />}
+        />
+      );
+    case "Notebook":
+      // Les cellules attendent le document, créé par l'effet de `FilePane` (docs/specs/notebook.md).
+      return (
+        <Modes
+          mode={mode}
+          source={source}
+          rendered={
+            doc ? (
+              <Suspense fallback={null}>
+                <NotebookView docKey={docKey} path={path} rootPath={rootPath} source={source} />
+              </Suspense>
+            ) : null
+          }
         />
       );
     case "LargeHtml":

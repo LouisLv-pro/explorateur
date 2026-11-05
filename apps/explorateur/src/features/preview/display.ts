@@ -12,6 +12,8 @@ export type DisplayModes = {
   mermaid?: DisplayMode;
   /** CSV, TSV, JSON et YAML (docs/specs/apercu-donnees.md) : un seul mode pour les quatre. */
   data?: DisplayMode;
+  /** Notebooks Jupyter (docs/specs/notebook.md) : Aperçu ou Source, jamais Scindé. */
+  notebook?: DisplayMode;
 };
 
 export const DEFAULT_MODES: DisplayModes = {
@@ -19,6 +21,7 @@ export const DEFAULT_MODES: DisplayModes = {
   html: "rendered",
   mermaid: "rendered",
   data: "rendered",
+  notebook: "rendered",
 };
 
 /**
@@ -35,7 +38,13 @@ export function viewKind(preview: FilePreview): ViewKind {
 
 /** Les trois boutons Aperçu, Scindé, Source (une grosse page HTML n'a que l'aperçu : voir `Preview`). */
 export function hasDisplayModes(kind: ViewKind): boolean {
-  return kind === "Markdown" || kind === "Html" || kind === "Mermaid" || kind === "Data";
+  return (
+    kind === "Markdown" ||
+    kind === "Html" ||
+    kind === "Mermaid" ||
+    kind === "Data" ||
+    kind === "Notebook"
+  );
 }
 
 /**
@@ -49,6 +58,7 @@ export function modeTarget(kind: ViewKind, mode: DisplayMode): keyof DisplayMode
   if (kind === "Data") return "data";
   if (kind === "Html") return "html";
   if (kind === "LargeHtml" && mode === "rendered") return "html";
+  if (kind === "Notebook" && mode !== "split") return "notebook";
   return null;
 }
 
@@ -58,5 +68,6 @@ export function displayFor(kind: ViewKind, modes: DisplayModes): DisplayMode {
   if (kind === "Mermaid") return modes.mermaid ?? "rendered";
   if (kind === "Data") return modes.data ?? "rendered";
   if (kind === "Html") return modes.html;
+  if (kind === "Notebook") return modes.notebook === "source" ? "source" : "rendered";
   return "rendered";
 }

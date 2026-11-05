@@ -35,7 +35,9 @@ export function appErrorMessage(error: AppError): string {
     case "IssueNotFound":
       return i18n.t("errors:IssueNotFound");
     case "NotBundled":
-      return i18n.t("errors:NotBundled");
+    case "KernelNotFound":
+    case "NoPythonEnv":
+      return i18n.t(`errors:${error.kind}`);
     case "Failed":
       return failureMessage(error.message);
     default:

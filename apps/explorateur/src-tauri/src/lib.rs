@@ -16,13 +16,20 @@ use tauri::{AppHandle, Manager, RunEvent, WindowEvent};
 use tauri_specta::{Builder, collect_commands, collect_events};
 
 use crate::{
-    commands::{browser::BrowserTabs, opened::OpenedPaths, terminal::TerminalSessions},
+    commands::{
+        browser::BrowserTabs, notebook::Notebooks, opened::OpenedPaths, terminal::TerminalSessions,
+    },
     state::AppState,
 };
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() -> Result<(), Box<dyn Error>> {
-    let builder = Builder::<tauri::Wry>::new()
+/// Fichier des types TypeScript des commandes. Chemin absolu : un chemin relatif dépendrait du
+/// dossier d'où l'app est lancée.
+#[cfg(debug_assertions)]
+const BINDINGS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../src/bindings.ts");
+
+/// Commandes et événements exposés au front, et leurs types (tauri-specta).
+fn specta_builder() -> Builder<tauri::Wry> {
+    Builder::<tauri::Wry>::new()
         .commands(collect_commands![
             commands::folders::open_root,
             commands::folders::list_recent_folders,
@@ -99,6 +106,12 @@ pub fn run() -> Result<(), Box<dyn Error>> {
             commands::browser::browser_back,
             commands::browser::browser_forward,
             commands::browser::browser_reload,
+            commands::notebook::list_python_envs,
+            commands::notebook::start_kernel,
+            commands::notebook::execute_cell,
+            commands::notebook::interrupt_kernel,
+            commands::notebook::restart_kernel,
+            commands::notebook::shutdown_kernel,
         ])
         .events(collect_events![
             commands::watch::DiskChanged,
@@ -108,15 +121,16 @@ pub fn run() -> Result<(), Box<dyn Error>> {
             commands::browser::BrowserLoading,
             commands::browser::BrowserNewTab,
             commands::opened::PathsOpened
-        ]);
+        ])
+}
+
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() -> Result<(), Box<dyn Error>> {
+    let builder = specta_builder();
 
     // En dev, régénère les types TypeScript des commandes dans src/bindings.ts.
-    // Chemin absolu : un chemin relatif dépendrait du dossier d'où l'app est lancée.
     #[cfg(debug_assertions)]
-    builder.export(
-        specta_typescript::Typescript::default(),
-        concat!(env!("CARGO_MANIFEST_DIR"), "/../src/bindings.ts"),
-    )?;
+    builder.export(specta_typescript::Typescript::default(), BINDINGS)?;
 
     tauri::Builder::default()
         // File des chemins du Finder : gérée ici, pas dans `setup`, car macOS peut livrer
@@ -165,6 +179,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
                 terminals: TerminalSessions::default(),
                 browser: BrowserTabs::default(),
                 reads: Mutex::new(ReadTracker::new()),
+                notebooks: Notebooks::default(),
             });
             show_window_fallback(app.handle());
             Ok(())
@@ -177,6 +192,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
                 && let Some(state) = app.try_state::<AppState>()
             {
                 state.terminals.close_all();
+                // Et les noyaux Jupyter : aucun `ipykernel` ne survit à l'app (spec notebook.md).
+                state.notebooks.kernels.shutdown_all();
             }
             // Fichier ou dossier ouvert depuis le Finder (spec ouvrir-depuis-finder.md).
             #[cfg(target_os = "macos")]
@@ -226,4 +243,17 @@ fn init_logs(dir: &Path) -> Result<(), Box<dyn Error>> {
         .with_ansi(false)
         .init();
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    /// Régénère `src/bindings.ts` sans ouvrir de fenêtre :
+    /// `cargo test -p explorateur export_bindings -- --ignored`.
+    #[test]
+    #[ignore = "écrit src/bindings.ts"]
+    fn export_bindings() {
+        super::specta_builder()
+            .export(specta_typescript::Typescript::default(), super::BINDINGS)
+            .unwrap();
+    }
 }

@@ -3,7 +3,7 @@ use std::sync::atomic::AtomicBool;
 
 use explorateur_core::{db::Db, last_read::ReadTracker, watch::RootWatcher};
 
-use crate::commands::{browser::BrowserTabs, terminal::TerminalSessions};
+use crate::commands::{browser::BrowserTabs, notebook::Notebooks, terminal::TerminalSessions};
 
 /// État partagé par les commandes, injecté via `tauri::State<AppState>`.
 pub struct AppState {
@@ -20,4 +20,7 @@ pub struct AppState {
     /// Versions lues et pastilles « modifié depuis votre dernière lecture » (spec
     /// derniere-lecture.md), en mémoire pour la session.
     pub reads: Mutex<ReadTracker>,
+    /// Noyaux Jupyter des notebooks ouverts (spec notebook.md) ; tous arrêtés à la sortie et au
+    /// changement de dossier racine.
+    pub notebooks: Notebooks,
 }

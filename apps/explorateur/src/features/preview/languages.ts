@@ -6,6 +6,8 @@ const BY_EXTENSION: Record<string, string> = {
   js: "javascript",
   jsx: "jsx",
   json: "json",
+  // Notebook Jupyter : sa source (mode Source) est du JSON.
+  ipynb: "json",
   toml: "toml",
   yaml: "yaml",
   yml: "yaml",

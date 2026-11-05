@@ -1,0 +1,47 @@
+import type { notebook as en } from "../en/notebook";
+
+export const notebook: typeof en = {
+  invalid: "Notebook invalide : {{message}}",
+  notV4: "pas un notebook de version 4 (nbformat absent ou inférieur à 4).",
+  toolbar: "Actions du notebook",
+  env: "Environnement Python",
+  envLoading: "Recherche de Python…",
+  noEnv: "Aucun Python avec ipykernel trouvé",
+  searchAgain: "Rechercher à nouveau",
+  installHint: "Installez ipykernel, puis recherchez à nouveau :",
+  copy: "Copier",
+  copied: "Copié",
+  status: {
+    none: "Aucun noyau",
+    starting: "Démarrage…",
+    idle: "Prêt",
+    busy: "Occupé",
+    dead: "Arrêté",
+  },
+  runAll: "Tout exécuter",
+  interrupt: "Interrompre",
+  restart: "Redémarrer",
+  clearOutputs: "Effacer les sorties",
+  died: "Le noyau s'est arrêté.",
+  empty: "Ce notebook n'a aucune cellule.",
+  cell: {
+    code: "Cellule de code",
+    markdown: "Cellule Markdown",
+    raw: "Cellule brute",
+    run: "Exécuter",
+    moveUp: "Monter",
+    moveDown: "Descendre",
+    remove: "Supprimer",
+    toCode: "En code",
+    toMarkdown: "En Markdown",
+    emptyMarkdown: "Cellule Markdown vide",
+  },
+  add: {
+    code: "+ Code",
+    markdown: "+ Markdown",
+  },
+  output: {
+    unknown: "Sortie non affichée ({{mime}})",
+    image: "Sortie de la cellule",
+  },
+};

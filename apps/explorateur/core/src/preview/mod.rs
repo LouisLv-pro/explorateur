@@ -15,6 +15,9 @@ pub use resource::{Resource, read_resource};
 /// Taille maximale d'un fichier texte lu pour l'aperçu : 2 Mio (inclus). Les compteurs des
 /// fichiers non suivis du statut git s'arrêtent au même seuil.
 pub(crate) const MAX_TEXT_BYTES: u64 = 2 * 1024 * 1024;
+/// Taille maximale d'un notebook (`.ipynb`) lu pour l'aperçu : 20 Mio (inclus). Plus haute que
+/// celle du texte car les images des sorties y sont en base64 (décision 0024).
+pub const MAX_NOTEBOOK_BYTES: u64 = 20 * 1024 * 1024;
 /// Nombre d'octets examinés pour détecter un fichier binaire (octet nul).
 const BINARY_WINDOW: usize = 8 * 1024;
 const UTF8_BOM: &str = "\u{feff}";
@@ -36,12 +39,16 @@ pub enum PreviewContent {
     Text {
         text: String,
     },
+    /// Notebook Jupyter (`.ipynb`, 20 Mio au plus) : le JSON tel quel, analysé par le front.
+    Notebook {
+        text: String,
+    },
     Image,
     Pdf,
     /// Page HTML de plus de 2 Mio : non lue, l'`iframe` la charge par le protocole `preview`
     /// mais la source n'est pas disponible.
     LargeHtml,
-    /// Texte de plus de 2 Mio : non lu.
+    /// Texte de plus de 2 Mio (notebook de plus de 20 Mio) : non lu.
     TooLarge,
     /// Octet nul dans les premiers Kio, ou UTF-8 invalide.
     Binary,
@@ -83,6 +90,9 @@ pub fn open_file(path: &str) -> Result<FilePreview> {
         PreviewKind::Image => PreviewContent::Image,
         PreviewKind::Pdf => PreviewContent::Pdf,
         PreviewKind::Html if size > MAX_TEXT_BYTES => PreviewContent::LargeHtml,
+        // Ce bras passe avant celui des textes : un notebook a sa propre limite.
+        PreviewKind::Notebook if size > MAX_NOTEBOOK_BYTES => PreviewContent::TooLarge,
+        PreviewKind::Notebook => read_text(path, &kind)?,
         _ if size > MAX_TEXT_BYTES => PreviewContent::TooLarge,
         _ => read_text(path, &kind)?,
     };
@@ -105,6 +115,7 @@ fn read_text(path: &str, kind: &PreviewKind) -> Result<PreviewContent> {
         PreviewKind::Markdown => PreviewContent::Markdown { text },
         PreviewKind::Html => PreviewContent::Html { text },
         PreviewKind::Mermaid => PreviewContent::Mermaid { text },
+        PreviewKind::Notebook => PreviewContent::Notebook { text },
         _ => PreviewContent::Text { text },
     })
 }
@@ -149,6 +160,8 @@ pub enum PreviewKind {
     Mermaid,
     Image,
     Pdf,
+    /// Notebook Jupyter (`.ipynb`).
+    Notebook,
     Text,
 }
 
@@ -165,6 +178,7 @@ impl PreviewKind {
             "mmd" | "mermaid" => Self::Mermaid,
             "png" | "jpg" | "jpeg" | "gif" | "webp" | "svg" | "avif" | "bmp" | "ico" => Self::Image,
             "pdf" => Self::Pdf,
+            "ipynb" => Self::Notebook,
             _ => Self::Text,
         }
     }

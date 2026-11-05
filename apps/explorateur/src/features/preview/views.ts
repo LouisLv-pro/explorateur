@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import { preloadable } from "@/lib/preloadable";
+import type { NotebookView } from "@/features/notebook/NotebookView";
 import type { DataView } from "./data/DataView";
 import { preloadHighlighter } from "./highlight";
 
@@ -11,6 +12,10 @@ export const markdownView = preloadable(() => import("./markdown/MarkdownView"))
 // Tableau et arbre des CSV, TSV, JSON et YAML (papaparse, yaml).
 export const dataView = preloadable<ComponentProps<typeof DataView>>(() =>
   import("./data/DataView").then((m) => ({ default: m.DataView })),
+);
+// Vue notebook (cellules, sorties) : chargée à la première ouverture d'un `.ipynb`.
+export const notebookView = preloadable<ComponentProps<typeof NotebookView>>(() =>
+  import("@/features/notebook/NotebookView").then((m) => ({ default: m.NotebookView })),
 );
 // CodeMirror (éditeur de la source).
 export const codeMirrorEditor = preloadable(() => import("@/features/editor/CodeMirrorEditor"));

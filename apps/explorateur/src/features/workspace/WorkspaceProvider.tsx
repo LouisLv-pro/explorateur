@@ -24,6 +24,7 @@ import {
   saveDocument,
   subscribeDocuments,
 } from "@/features/editor/documents";
+import { pruneNotebookKernels } from "@/features/notebook/kernel";
 import { SaveChangesDialog, UnsavedChangesDialog } from "@/features/editor/UnsavedDialogs";
 import { shortcutLabel } from "@/features/commands/registry";
 import { useCommand } from "@/features/commands/store";
@@ -357,9 +358,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   // L'état modifié vit dans les documents de l'éditeur : les onglets le reflètent (point, épinglage).
   useEffect(() => subscribeDocuments(() => setTabsState(syncDirty)), [setTabsState]);
 
-  // Documents des onglets fermés : oubliés.
+  // Documents des onglets fermés : oubliés ; leurs noyaux Jupyter, arrêtés.
   useEffect(() => {
-    pruneDocuments(new Set(tabsState.tabs.map(tabKey)));
+    const keys = new Set(tabsState.tabs.map(tabKey));
+    pruneDocuments(keys);
+    pruneNotebookKernels(keys);
   }, [tabsState.tabs]);
 
   // Rust demande confirmation au front avant de quitter s'il reste des modifications (menu.rs).

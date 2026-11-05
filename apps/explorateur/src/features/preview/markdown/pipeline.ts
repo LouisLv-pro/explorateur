@@ -31,6 +31,32 @@ export const REHYPE_PLUGINS_WITH_ISSUES: NonNullable<Options["rehypePlugins"]> =
 ];
 
 /**
+ * Sortie `text/html` d'un notebook (spec notebook.md) : même nettoyage, mais les feuilles de
+ * style (`<style>` d'un tableau pandas) sont retirées avant, sinon le nettoyage en garderait le
+ * texte.
+ */
+export const OUTPUT_HTML_REHYPE_PLUGINS: NonNullable<Options["rehypePlugins"]> = [
+  rehypeRaw,
+  rehypeDropStyles,
+  rehypeSanitize,
+  rehypeColorSwatches,
+];
+
+function dropStyles(parent: Root | Element) {
+  (parent as Root).children = parent.children.filter((child): child is RootContent => {
+    if (child.type !== "element") return true;
+    if (child.tagName === "style") return false;
+    dropStyles(child);
+    return true;
+  });
+}
+
+/** Plugin rehype : retire les éléments `style` et leur contenu. */
+function rehypeDropStyles() {
+  return (tree: Root) => dropStyles(tree);
+}
+
+/**
  * Pas de pastille dans un lien (son texte est souvent son adresse) ni dans un bloc de code
  * (`CodeBlock` les pose sur ses jetons colorés).
  */

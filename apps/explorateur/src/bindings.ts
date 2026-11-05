@@ -224,6 +224,24 @@ export const commands = {
 	browserForward: (id: string) => typedError<null, AppError>(__TAURI_INVOKE("browser_forward", { id })),
 	/**  Recharge la page de l'onglet (réessaie après une erreur de chargement). */
 	browserReload: (id: string) => typedError<null, AppError>(__TAURI_INVOKE("browser_reload", { id })),
+	/**
+	 *  Environnements Python du notebook `path` : `.venv` de son dossier et de ses parents sous le
+	 *  dossier racine, kernelspecs Jupyter, `python3` du shell (sondes de 5 s au plus).
+	 */
+	listPythonEnvs: (path: string) => typedError<PythonEnv[], AppError>(__TAURI_INVOKE("list_python_envs", { path })),
+	/**
+	 *  Démarre un noyau pour le notebook `notebook_path` dans l'environnement `env_id`. Ses
+	 *  événements arrivent par `channel` ; rend la main quand le noyau répond.
+	 */
+	startKernel: (notebookPath: string, envId: string, channel: Channel<KernelEvent>) => typedError<string, AppError>(__TAURI_INVOKE("start_kernel", { notebookPath, envId, channel })),
+	/**  Envoie le code de la cellule `cell_id` au noyau. N'attend pas la fin de l'exécution. */
+	executeCell: (kernelId: string, cellId: string, code: string) => typedError<null, AppError>(__TAURI_INVOKE("execute_cell", { kernelId, cellId, code })),
+	/**  Interrompt la cellule en cours. */
+	interruptKernel: (kernelId: string) => typedError<null, AppError>(__TAURI_INVOKE("interrupt_kernel", { kernelId })),
+	/**  Redémarre le noyau (variables perdues), même identifiant et même canal. */
+	restartKernel: (kernelId: string) => typedError<null, AppError>(__TAURI_INVOKE("restart_kernel", { kernelId })),
+	/**  Arrête le noyau (onglet fermé, environnement changé). */
+	shutdownKernel: (kernelId: string) => typedError<null, AppError>(__TAURI_INVOKE("shutdown_kernel", { kernelId })),
 };
 
 /** Events */
@@ -301,6 +319,15 @@ export type AppError = { kind: "Database"; message: string } |
  *  défaut d'un type (spec `app-par-defaut.md`). Rien n'est demandé à macOS.
  */
 { kind: "NotBundled" } | 
+/**  Noyau Jupyter inconnu (identifiant jamais donné, déjà arrêté, ou mort). */
+{ kind: "KernelNotFound" } | 
+/**
+ *  Le noyau n'a pas démarré (sorti tout de suite, ou muet pendant 30 s). Porte la fin de
+ *  sa sortie d'erreur telle quelle (ou son statut de sortie si elle est vide).
+ */
+{ kind: "KernelStartFailed"; message: string } | 
+/**  Environnement Python introuvable, ou sans `ipykernel` (spec `notebook.md`). */
+{ kind: "NoPythonEnv" } | 
 /**  Autre erreur d'entrée-sortie. */
 { kind: "Io"; message: string } | 
 /**
@@ -498,6 +525,11 @@ export type Entry = {
 	/**  `None` pour un dossier. */
 	preview_kind: PreviewKind | null,
 };
+
+/**  Fin d'exécution d'une cellule (`status` de l'`execute_reply`). */
+export type ExecutionStatus = "Ok" | "Error" | 
+/**  Requête non exécutée : une cellule précédente a échoué ou a été interrompue. */
+"Aborted";
 
 /**
  *  Genre d'un échec décrit par l'app. Sérialisé `{ reason, detail }` : `detail` porte le texte
@@ -805,6 +837,27 @@ export type IssueTemplate = {
 	body: string,
 };
 
+/**  Message d'un noyau vers le front (un par `tauri::ipc::Channel`). */
+export type KernelEvent = { type: "status"; state: KernelState } | 
+/**  Le noyau commence la cellule (`execute_input`) : compteur `[n]`. */
+{ type: "executionStarted"; cellId: string; 
+/**  Specta refuse `i64` : exporté comme `number`. */
+executionCount: number } | 
+/**  Sortie nbformat (`stream`, `display_data`, `execute_result`, `error`). */
+{ type: "output"; cellId: string; 
+/**
+ *  Exporté en `unknown` : le type specta de `Value` contient des `i64`, refusés à
+ *  l'export TypeScript. Le front type lui-même les sorties nbformat.
+ */
+output: unknown } | { type: "clearOutput"; cellId: string; wait: boolean } | 
+/**  Toujours après les sorties de la cellule. */
+{ type: "executionFinished"; cellId: string; status: ExecutionStatus } | 
+/**  Le processus s'est arrêté sans `shutdown`. Porte la fin de sa sortie d'erreur. */
+{ type: "died"; message: string };
+
+/**  État du noyau montré par la barre d'outils. */
+export type KernelState = "Starting" | "Idle" | "Busy" | "Dead";
+
 /**  Label d'issue. `color` sans `#`, telle que rendue par `gh`. */
 export type Label = {
 	name: string,
@@ -907,19 +960,39 @@ export type PendingType = {
 /**  Contenu d'aperçu d'un fichier. Image et PDF sont lus par le front (protocole `asset`). */
 export type PreviewContent = { kind: "Markdown"; text: string } | { kind: "Html"; text: string } | 
 /**  Source Mermaid (`.mmd`, `.mermaid`) : le front la dessine. */
-{ kind: "Mermaid"; text: string } | { kind: "Text"; text: string } | { kind: "Image" } | { kind: "Pdf" } | 
+{ kind: "Mermaid"; text: string } | { kind: "Text"; text: string } | 
+/**  Notebook Jupyter (`.ipynb`, 20 Mio au plus) : le JSON tel quel, analysé par le front. */
+{ kind: "Notebook"; text: string } | { kind: "Image" } | { kind: "Pdf" } | 
 /**
  *  Page HTML de plus de 2 Mio : non lue, l'`iframe` la charge par le protocole `preview`
  *  mais la source n'est pas disponible.
  */
 { kind: "LargeHtml" } | 
-/**  Texte de plus de 2 Mio : non lu. */
+/**  Texte de plus de 2 Mio (notebook de plus de 20 Mio) : non lu. */
 { kind: "TooLarge" } | 
 /**  Octet nul dans les premiers Kio, ou UTF-8 invalide. */
 { kind: "Binary" };
 
 /**  Type d'aperçu d'un fichier, déduit de son extension. */
-export type PreviewKind = "markdown" | "html" | "mermaid" | "image" | "pdf" | "text";
+export type PreviewKind = "markdown" | "html" | "mermaid" | "image" | "pdf" | 
+/**  Notebook Jupyter (`.ipynb`). */
+"notebook" | "text";
+
+/**  Environnement Python proposé dans le sélecteur du notebook. */
+export type PythonEnv = {
+	/**
+	 *  `venv:<python>`, `kernelspec:<dossier>` ou `shell:<python>` : opaque pour le front,
+	 *  rendu tel quel à `start`.
+	 */
+	id: string,
+	label: string,
+	kind: PythonEnvKind,
+	/**  Faux : listé mais non sélectionnable. */
+	hasIpykernel: boolean,
+};
+
+/**  Origine d'un environnement. */
+export type PythonEnvKind = "Venv" | "Kernelspec" | "Shell";
 
 /**  Pastilles sous un dossier racine : chemins absolus triés. */
 export type ReadMarks = {

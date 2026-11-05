@@ -75,6 +75,9 @@ extension to install.
 - **Dev servers and apps detected** in the folder: Vite, Next.js, Expo, Electron, Flutter,
   Android, Xcode, Rust and Swift projects start in one click.
 - A built-in **browser tab** shows the running site next to its code.
+- **Jupyter notebooks** open as notebooks: edit the cells and run them in a local Python
+  kernel, from the project's `.venv` or any installed kernel. Saving keeps the file readable
+  by Jupyter.
 
 <p align="center">
   <picture>
