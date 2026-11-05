@@ -86,6 +86,10 @@ extension to install.
   </picture>
 </p>
 
+<p align="center">
+  <img src="apps/explorateur/media/notebook.png" alt="A Jupyter notebook run in the project's .venv: a pandas table and a matplotlib chart of daily temperatures" width="900">
+</p>
+
 ### Move fast
 
 - **Quick open** (`⌘P`): fuzzy search across files and recent folders. Type `name:42` to land
