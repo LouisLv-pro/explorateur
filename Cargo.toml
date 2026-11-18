@@ -63,6 +63,10 @@ jupyter-zmq-client = "=3.0.1"
 jupyter-protocol = "=2.0.3"
 # ZeroMQ en Rust, tiré par jupyter-zmq-client : seulement pour lire les messages bruts (JSON intact).
 zeromq = { version = "=0.7.0", default-features = false }
+# Lecture des archives .pptx (repli simplifié de l'aperçu, décision 0025 de l'app) : lecture seule, deflate seulement.
+zip = { version = "9", default-features = false, features = ["deflate"] }
+# Lecture en flux du XML des diapos. Déjà dans Cargo.lock par une autre crate.
+quick-xml = "0.42"
 
 # Chaque crate hérite de ces lints avec `[lints] workspace = true`.
 [workspace.lints.rust]

@@ -11,6 +11,7 @@ pub mod git;
 pub mod github;
 pub mod last_read;
 pub mod notebook;
+pub mod presentation;
 pub mod preview;
 mod process;
 pub mod search;

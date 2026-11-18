@@ -16,6 +16,7 @@ export const errors = {
   KernelNotFound: "The kernel is no longer running.",
   KernelStartFailed: "The kernel did not start: {{detail}}",
   NoPythonEnv: "No Python with ipykernel found.",
+  Unreadable: "Preview unavailable: unreadable presentation.",
   Gh: "{{detail}}",
   Browser: "Browser error: {{detail}}",
   Io: "Disk error: {{detail}}",

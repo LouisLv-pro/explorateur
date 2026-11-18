@@ -9,7 +9,6 @@ export const defaultApp: typeof en = {
   groups: {
     text: "Markdown et texte",
     data: "Données",
-    html: "HTML",
     code: "Code",
   },
   status: {

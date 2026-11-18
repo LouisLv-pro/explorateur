@@ -38,6 +38,7 @@ fn specta_builder() -> Builder<tauri::Wry> {
             commands::opened::take_opened_paths,
             commands::tree::list_directory,
             commands::preview::open_file,
+            commands::preview::render_presentation,
             commands::search::find_files,
             commands::search::search_content,
             commands::files::reveal_in_finder,

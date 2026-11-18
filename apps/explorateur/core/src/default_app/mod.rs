@@ -12,12 +12,16 @@ pub enum Group {
     Text,
     /// Données (CSV, JSON, YAML…).
     Data,
-    Html,
     Code,
 }
 
-/// Extensions de chaque groupe, dans l'ordre d'affichage. Exactement celles de
-/// `bundle.fileAssociations` (`src-tauri/tauri.conf.json`) : un test le vérifie.
+/// Extensions de `bundle.fileAssociations` jamais proposées : pour macOS, l'app par défaut de
+/// `public.html` est le navigateur web. Accepter explorateur pour HTML lui donnait aussi `http`
+/// et `https`, et plus aucun lien web ne s'ouvrait. « Ouvrir avec » les propose toujours.
+pub const NOT_PROPOSED: &[&str] = &["html", "htm"];
+
+/// Extensions de chaque groupe, dans l'ordre d'affichage. Avec `NOT_PROPOSED`, exactement celles
+/// de `bundle.fileAssociations` (`src-tauri/tauri.conf.json`) : un test le vérifie.
 pub const GROUPS: &[(Group, &[&str])] = &[
     (Group::Text, &["md", "markdown", "txt", "log"]),
     (
@@ -26,7 +30,6 @@ pub const GROUPS: &[(Group, &[&str])] = &[
             "csv", "json", "jsonc", "yaml", "yml", "toml", "xml", "ini", "conf",
         ],
     ),
-    (Group::Html, &["html", "htm"]),
     (
         Group::Code,
         &[

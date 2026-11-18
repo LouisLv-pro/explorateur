@@ -1,6 +1,6 @@
 // Simule `default_app_status` et `set_default_app` (spec app-par-defaut.md) : la table des
 // groupes de `core/src/default_app`, avec les UTI de macOS. État de départ : Texte fait, Données
-// 3 types sur 8, HTML et Code à faire. `set_default_app` répond après 300 ms et accepte, sauf les
+// 3 types sur 8, Code à faire. `set_default_app` répond après 300 ms et accepte, sauf les
 // UTI de `window.__mockDefaultApp.refuse`. `?notBundled=1` : les deux commandes rendent `NotBundled`.
 import type { AppError, Group, GroupStatus, PendingType } from "@/bindings";
 
@@ -33,13 +33,6 @@ const TABLE: readonly (readonly [Group, readonly (readonly [string, string])[]])
       ["xml", "public.xml"],
       ["ini", "public.ini-source"],
       ["conf", "app.explorateur.mac.conf"],
-    ],
-  ],
-  [
-    "html",
-    [
-      ["html", "public.html"],
-      ["htm", "public.html"],
     ],
   ],
   [

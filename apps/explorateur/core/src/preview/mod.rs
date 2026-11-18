@@ -45,6 +45,8 @@ pub enum PreviewContent {
     },
     Image,
     Pdf,
+    /// Présentation `.pptx` : non lue, rendue à la demande par `presentation::render_presentation`.
+    Presentation,
     /// Page HTML de plus de 2 Mio : non lue, l'`iframe` la charge par le protocole `preview`
     /// mais la source n'est pas disponible.
     LargeHtml,
@@ -89,6 +91,7 @@ pub fn open_file(path: &str) -> Result<FilePreview> {
     let content = match kind {
         PreviewKind::Image => PreviewContent::Image,
         PreviewKind::Pdf => PreviewContent::Pdf,
+        PreviewKind::Presentation => PreviewContent::Presentation,
         PreviewKind::Html if size > MAX_TEXT_BYTES => PreviewContent::LargeHtml,
         // Ce bras passe avant celui des textes : un notebook a sa propre limite.
         PreviewKind::Notebook if size > MAX_NOTEBOOK_BYTES => PreviewContent::TooLarge,
@@ -126,7 +129,7 @@ pub(crate) fn read_text_file(path: &Path) -> Option<String> {
     let name = path.file_name()?.to_string_lossy();
     if matches!(
         PreviewKind::from_name(&name),
-        PreviewKind::Image | PreviewKind::Pdf
+        PreviewKind::Image | PreviewKind::Pdf | PreviewKind::Presentation
     ) {
         return None;
     }
@@ -160,6 +163,8 @@ pub enum PreviewKind {
     Mermaid,
     Image,
     Pdf,
+    /// Présentation PowerPoint (`.pptx`).
+    Presentation,
     /// Notebook Jupyter (`.ipynb`).
     Notebook,
     Text,
@@ -178,6 +183,7 @@ impl PreviewKind {
             "mmd" | "mermaid" => Self::Mermaid,
             "png" | "jpg" | "jpeg" | "gif" | "webp" | "svg" | "avif" | "bmp" | "ico" => Self::Image,
             "pdf" => Self::Pdf,
+            "pptx" => Self::Presentation,
             "ipynb" => Self::Notebook,
             _ => Self::Text,
         }

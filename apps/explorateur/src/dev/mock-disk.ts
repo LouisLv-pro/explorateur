@@ -295,6 +295,9 @@ const demo = dir({
   assets: dir({
     "logo.png": file("", { size: 4096 }),
     "plan.pdf": file("", { size: 52_480 }),
+    // Présentations : rendues par `render_presentation` (mock-ipc), jamais lues.
+    "deck.pptx": file("", { size: 184_320 }),
+    "genere.pptx": file("", { size: 96_256 }),
     "gros.log": file("", { size: 3_250_000, special: "tooLarge" }),
     "rapport.html": file("", { size: 4_800_000, special: "tooLarge" }),
     "outil.bin": file("", { size: 20_480, special: "binary" }),
@@ -593,6 +596,7 @@ export function previewKindOf(name: string): PreviewKind {
   if (["png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico"].includes(ext))
     return "image";
   if (ext === "pdf") return "pdf";
+  if (ext === "pptx") return "presentation";
   if (ext === "ipynb") return "notebook";
   return "text";
 }
@@ -718,6 +722,8 @@ export function openFakeFile(path: string): FilePreview {
       return { ...base, content: { kind: "Image" } };
     case "pdf":
       return { ...base, content: { kind: "Pdf" } };
+    case "presentation":
+      return { ...base, content: { kind: "Presentation" } };
     case "notebook":
       return { ...base, content: { kind: "Notebook", text } };
     case "text":
@@ -753,7 +759,7 @@ export function searchFakeContent(
         continue;
       }
       const kind = previewKindOf(name);
-      if (child.special || kind === "image" || kind === "pdf") continue;
+      if (child.special || kind === "image" || kind === "pdf" || kind === "presentation") continue;
       const hits: FileHits["hits"] = [];
       (child.content ?? "").split("\n").forEach((raw, index) => {
         const text = raw.replace(/\r$/, "");

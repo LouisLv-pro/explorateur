@@ -37,6 +37,7 @@ export function appErrorMessage(error: AppError): string {
     case "NotBundled":
     case "KernelNotFound":
     case "NoPythonEnv":
+    case "Unreadable":
       return i18n.t(`errors:${error.kind}`);
     case "Failed":
       return failureMessage(error.message);

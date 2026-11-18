@@ -72,6 +72,10 @@ pub enum AppError {
     /// Environnement Python introuvable, ou sans `ipykernel` (spec `notebook.md`).
     #[error("aucun Python avec ipykernel")]
     NoPythonEnv,
+    /// Archive de présentation illisible (pas un ZIP, `ppt/presentation.xml` absent) : aucun
+    /// aperçu possible (spec `apercu-pptx.md`).
+    #[error("présentation illisible")]
+    Unreadable,
     /// Autre erreur d'entrée-sortie.
     #[error("lecture du disque : {0}")]
     Io(String),

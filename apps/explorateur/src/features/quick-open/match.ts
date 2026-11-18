@@ -18,6 +18,7 @@ const KIND_BY_EXTENSION: Record<string, PreviewKind> = {
   bmp: "image",
   ico: "image",
   pdf: "pdf",
+  pptx: "presentation",
   ipynb: "notebook",
 };
 

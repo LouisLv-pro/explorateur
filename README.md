@@ -147,7 +147,8 @@ install it elsewhere.
 ### Default app for text files (optional)
 
 In the app menu, choose **Make Default for File Types…**, then pick the groups (Markdown and
-text, data, HTML, code). macOS asks you to confirm once per file type, one window at a time.
+text, data, code). macOS asks you to confirm once per file type, one window at a time. HTML is
+not offered: macOS would also make explorateur your web browser.
 
 ## What it uses on your Mac
 

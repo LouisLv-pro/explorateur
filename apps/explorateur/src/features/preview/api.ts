@@ -15,6 +15,21 @@ export function filePreviewQuery(path: string) {
   });
 }
 
+/**
+ * Rendu HTML d'une présentation. La révision (`version`, du rechargement automatique) est dans
+ * la clé : un fichier modifié relance le rendu. Un rendu déjà vu reste affiché pendant le suivant.
+ */
+export function usePresentationRender(path: string, version: number, enabled: boolean) {
+  return useQuery({
+    enabled,
+    queryKey: ["render_presentation", path, version],
+    queryFn: async () => unwrap(await commands.renderPresentation(path)),
+    retry: false,
+    // Le cache disque de Rust garde le rendu : pas de relance tant que la révision est la même.
+    staleTime: Infinity,
+  });
+}
+
 /** Contenu du fichier courant. Un fichier déjà vu s'affiche aussitôt, relu en arrière-plan. */
 export function useFilePreview(path: string) {
   return useQuery(filePreviewQuery(path));

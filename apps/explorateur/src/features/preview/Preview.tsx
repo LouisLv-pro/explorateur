@@ -12,7 +12,8 @@ import {
 import { List, LoaderCircle, RotateCw } from "lucide-react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
-import type { AppError, FilePreview, RootFolder } from "@/bindings";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { AppError, FilePreview, PresentationRender, RootFolder } from "@/bindings";
 import i18n from "@/i18n";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -39,7 +40,9 @@ import { useWorkspace } from "@/features/workspace/context";
 import { isAppError } from "@/lib/ipc";
 import { previewUrl, relativePath } from "@/lib/paths";
 import { cn } from "@/lib/utils";
-import { useFilePreview } from "./api";
+import { useFilePreview, usePresentationRender } from "./api";
+import { slidesLabel } from "./presentation";
+import { PresentationPending, PresentationView } from "./PresentationView";
 import { shortcutHint, type ShortcutAction } from "@/features/shortcuts/shortcuts";
 import { useShortcuts } from "@/features/shortcuts/useShortcuts";
 import {
@@ -176,6 +179,13 @@ const FilePane = memo(function FilePane({ root, tab, modes, onMode }: PaneProps)
   const preview = query.isError && !keepDraft ? undefined : query.data;
   const kind = preview ? viewKind(preview) : undefined;
   const mode = kind ? displayFor(kind, modes) : "rendered";
+  // Rendu d'une présentation (spec apercu-pptx.md) : demandé seulement pour un `.pptx` lu.
+  const fileVersion = useFileVersion(entry.path);
+  const presentation = usePresentationRender(
+    entry.path,
+    fileVersion,
+    preview?.content.kind === "Presentation",
+  );
 
   // Les gestes « depuis la sélection » (menu Actions) lisent l'éditeur : seulement si la source
   // est affichée. Gardé tel quel quand le volet est masqué (`<Activity>`), sans nettoyage.
@@ -217,6 +227,19 @@ const FilePane = memo(function FilePane({ root, tab, modes, onMode }: PaneProps)
         <FilePath path={relativePath(entry.path, root.path)} />
         <div className="ml-auto flex shrink-0 items-center gap-3 text-body-sm text-mute">
           {imageSize && <span>{`${imageSize[0]} × ${imageSize[1]}`}</span>}
+          {presentation.data && (
+            <>
+              {presentation.data.engine === "Simplified" && (
+                <span
+                  title={t("presentation.simplifiedHint")}
+                  className="rounded-sm border border-hairline px-1.5 text-caption text-ink"
+                >
+                  {t("presentation.simplified")}
+                </span>
+              )}
+              <span>{slidesLabel(presentation.data.slides)}</span>
+            </>
+          )}
           {preview && <span>{formatSize(preview.size)}</span>}
           {kind !== undefined && (hasDisplayModes(kind) || kind === "LargeHtml") && (
             <div role="group" aria-label={t("header.display")} className="flex gap-0.5">
@@ -316,6 +339,7 @@ const FilePane = memo(function FilePane({ root, tab, modes, onMode }: PaneProps)
             line={tab.line}
             lineSeq={tab.lineSeq}
             reloads={reloads}
+            presentation={presentation}
             onImageSize={(w, h) => setImageSize([w, h])}
           />
         )
@@ -420,6 +444,7 @@ function Body({
   line,
   lineSeq,
   reloads,
+  presentation,
   onImageSize,
 }: {
   preview: FilePreview;
@@ -431,6 +456,7 @@ function Body({
   line: number | undefined;
   lineSeq: number | undefined;
   reloads: number;
+  presentation: UseQueryResult<PresentationRender, Error>;
   onImageSize: (width: number, height: number) => void;
 }) {
   const { t } = useTranslation("preview");
@@ -546,6 +572,19 @@ function Body({
     case "Pdf":
       // Sans `sandbox` : il bloquerait le lecteur PDF du WebView.
       return <iframe title={name} src={assetUrl} className="min-h-0 w-full flex-1 border-0" />;
+    case "Presentation":
+      if (presentation.isError) {
+        return (
+          <Message>
+            <p role="alert">{presentationErrorMessage(presentation.error)}</p>
+          </Message>
+        );
+      }
+      return presentation.data ? (
+        <PresentationView render={presentation.data} name={name} />
+      ) : (
+        <PresentationPending />
+      );
     case "TooLarge":
       return (
         <Message>
@@ -577,6 +616,13 @@ function PageFrame({ stamp, name, src }: { stamp: number; name: string; src: str
       className="min-h-0 w-full min-w-0 flex-1 border-0 bg-white scheme-light"
     />
   );
+}
+
+/** Message d'un rendu de présentation échoué : archive illisible ou autre cause. */
+function presentationErrorMessage(error: unknown): string {
+  return isAppError(error) && error.kind === "Unreadable"
+    ? i18n.t("preview:presentation.unreadable")
+    : readErrorMessage(error);
 }
 
 /** Message d'une lecture échouée, dans la langue active (appelé au rendu). */

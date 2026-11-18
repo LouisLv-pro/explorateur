@@ -6,6 +6,7 @@ import {
   FileType,
   Folder,
   FolderOpen,
+  Presentation,
   type LucideProps,
 } from "lucide-react";
 import type { Entry } from "@/bindings";
@@ -86,6 +87,8 @@ export function EntryIcon({
       return <FileImage {...props} />;
     case "pdf":
       return <FileType {...props} />;
+    case "presentation":
+      return <Presentation {...props} />;
     default:
       return isCode(entry.name) ? <FileCode {...props} /> : <File {...props} />;
   }

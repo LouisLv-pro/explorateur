@@ -17,6 +17,7 @@ export const errors: typeof en = {
   KernelNotFound: "Le noyau ne tourne plus.",
   KernelStartFailed: "Le noyau n'a pas démarré : {{detail}}",
   NoPythonEnv: "Aucun Python avec ipykernel trouvé.",
+  Unreadable: "Aperçu indisponible : présentation illisible.",
   Gh: "{{detail}}",
   Browser: "Erreur du navigateur : {{detail}}",
   Io: "Erreur du disque : {{detail}}",

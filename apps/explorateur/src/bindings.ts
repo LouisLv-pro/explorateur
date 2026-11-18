@@ -33,6 +33,11 @@ export const commands = {
 	listDirectory: (path: string, showHidden: boolean) => typedError<Entry[], AppError>(__TAURI_INVOKE("list_directory", { path, showHidden })),
 	openFile: (path: string) => typedError<FilePreview, AppError>(__TAURI_INVOKE("open_file", { path })),
 	/**
+	 *  Rend une présentation `.pptx` en HTML dans le cache de l'app (spec `apercu-pptx.md`).
+	 *  Quick Look lance un processus externe : le rendu tourne sur un fil de fond.
+	 */
+	renderPresentation: (path: string) => typedError<PresentationRender, AppError>(__TAURI_INVOKE("render_presentation", { path })),
+	/**
 	 *  Parcours du disque : sur un fil réservé aux tâches bloquantes (`spawn_blocking`), pour ne pas
 	 *  occuper un fil du runtime asynchrone.
 	 */
@@ -328,6 +333,11 @@ export type AppError = { kind: "Database"; message: string } |
 { kind: "KernelStartFailed"; message: string } | 
 /**  Environnement Python introuvable, ou sans `ipykernel` (spec `notebook.md`). */
 { kind: "NoPythonEnv" } | 
+/**
+ *  Archive de présentation illisible (pas un ZIP, `ppt/presentation.xml` absent) : aucun
+ *  aperçu possible (spec `apercu-pptx.md`).
+ */
+{ kind: "Unreadable" } | 
 /**  Autre erreur d'entrée-sortie. */
 { kind: "Io"; message: string } | 
 /**
@@ -716,7 +726,7 @@ export type Group =
 /**  Markdown et texte. */
 "text" | 
 /**  Données (CSV, JSON, YAML…). */
-"data" | "html" | "code";
+"data" | "code";
 
 /**
  *  État d'un groupe : nombre de types distincts, combien sont déjà à explorateur, et ceux qui
@@ -957,12 +967,21 @@ export type PendingType = {
 	extensions: string[],
 };
 
+/**  Rendu d'une présentation : `html` est le chemin absolu du `Preview.html` à afficher. */
+export type PresentationRender = {
+	html: string,
+	slides: number,
+	engine: RenderEngine,
+};
+
 /**  Contenu d'aperçu d'un fichier. Image et PDF sont lus par le front (protocole `asset`). */
 export type PreviewContent = { kind: "Markdown"; text: string } | { kind: "Html"; text: string } | 
 /**  Source Mermaid (`.mmd`, `.mermaid`) : le front la dessine. */
 { kind: "Mermaid"; text: string } | { kind: "Text"; text: string } | 
 /**  Notebook Jupyter (`.ipynb`, 20 Mio au plus) : le JSON tel quel, analysé par le front. */
 { kind: "Notebook"; text: string } | { kind: "Image" } | { kind: "Pdf" } | 
+/**  Présentation `.pptx` : non lue, rendue à la demande par `presentation::render_presentation`. */
+{ kind: "Presentation" } | 
 /**
  *  Page HTML de plus de 2 Mio : non lue, l'`iframe` la charge par le protocole `preview`
  *  mais la source n'est pas disponible.
@@ -975,6 +994,8 @@ export type PreviewContent = { kind: "Markdown"; text: string } | { kind: "Html"
 
 /**  Type d'aperçu d'un fichier, déduit de son extension. */
 export type PreviewKind = "markdown" | "html" | "mermaid" | "image" | "pdf" | 
+/**  Présentation PowerPoint (`.pptx`). */
+"presentation" | 
 /**  Notebook Jupyter (`.ipynb`). */
 "notebook" | "text";
 
@@ -1055,6 +1076,9 @@ export type RemoteState =
 { kind: "publishable"; remote: string } | 
 /**  Branche sans amont, plusieurs remotes sans `origin`. */
 { kind: "ambiguousRemote" };
+
+/**  Moteur qui a produit un rendu. */
+export type RenderEngine = "QuickLook" | "Simplified";
 
 /**  Dépôt GitHub du dossier racine. */
 export type RepoInfo = {

@@ -8,7 +8,6 @@ export const defaultApp = {
   groups: {
     text: "Markdown and text",
     data: "Data",
-    html: "HTML",
     code: "Code",
   },
   status: {

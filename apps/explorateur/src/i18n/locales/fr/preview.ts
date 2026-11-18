@@ -27,6 +27,16 @@ export const preview: typeof en = {
     notAFile: "Ce chemin est un dossier, pas un fichier.",
     other: "Lecture impossible.",
   },
+  presentation: {
+    preparing: "Préparation de l'aperçu…",
+    frameTitle: "Présentation {{name}}",
+    unreadable: "Aperçu indisponible : présentation illisible.",
+    simplified: "Aperçu simplifié",
+    simplifiedHint:
+      "Quick Look n'a pas pu rendre ce fichier : seuls les images et le texte sont affichés.",
+    slides_one: "{{n}} diapositive",
+    slides_other: "{{n}} diapositives",
+  },
   image: {
     unreadable: "Image illisible.",
   },

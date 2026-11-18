@@ -50,6 +50,7 @@ fn mime_for(path: &str) -> &'static str {
         "otf" => "font/otf",
         "txt" => "text/plain; charset=utf-8",
         "xml" => "application/xml",
+        "pdf" => "application/pdf",
         "wasm" => "application/wasm",
         "mp4" => "video/mp4",
         "webm" => "video/webm",

@@ -27,6 +27,15 @@ export const preview = {
     notAFile: "This path is a folder, not a file.",
     other: "Couldn't read this file.",
   },
+  presentation: {
+    preparing: "Preparing the preview…",
+    frameTitle: "Presentation {{name}}",
+    unreadable: "Preview unavailable: unreadable presentation.",
+    simplified: "Simplified preview",
+    simplifiedHint: "Quick Look couldn't render this file: only images and text are shown.",
+    slides_one: "{{n}} slide",
+    slides_other: "{{n}} slides",
+  },
   image: {
     unreadable: "Couldn't read this image.",
   },

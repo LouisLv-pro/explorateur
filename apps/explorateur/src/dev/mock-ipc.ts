@@ -13,6 +13,7 @@ import {
   type Hunk,
   type IssueFilter,
   type NewIssue,
+  type PresentationRender,
   type RecentFolder,
   type RootFolder,
 } from "@/bindings";
@@ -175,6 +176,16 @@ const handlers: Record<string, Handler> = {
   take_opened_paths: (args) => takeFakeOpened((args.currentRoot as string | null) ?? null),
   list_directory: (args) => listFakeDirectory(args.path as string, args.showHidden as boolean),
   open_file: (args) => openFakeFile(args.path as string),
+  // Aperçu PPTX : 3 diapositives ; `genere.pptx` simule le repli simplifié. Le protocole
+  // `preview` n'existe pas dans le navigateur : chemin vide, l'iframe reste sans `src`.
+  render_presentation: (args) => {
+    const path = args.path as string;
+    return {
+      html: "",
+      slides: 3,
+      engine: path.endsWith("/genere.pptx") ? "Simplified" : "QuickLook",
+    } satisfies PresentationRender;
+  },
   find_files: (args) =>
     findFakeFiles(args.root as string, args.query as string, args.showHidden as boolean),
   search_content: (args) =>
